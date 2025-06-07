@@ -33,7 +33,7 @@ model Report {
   comment    String?
   createdAt  DateTime     @default(now())
 
-  @@unique([userId, reportDate]) // ✅ Prevent duplicate reports for same user on same date
+  @@unique([userId, reportDate]) // Prevent duplicate reports for same user on same date
 }
 
 
