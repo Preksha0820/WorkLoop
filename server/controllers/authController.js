@@ -38,16 +38,6 @@ export const signup = async (req, res) => {
   }
 };
 
-export const getAllEmployees = async (req, res) => {
-  try {
-    const employees = await prisma.user.findMany({ where: { role: Role.EMPLOYEE } });
-    res.status(200).json(employees);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error fetching employees' });
-  }
-};
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
