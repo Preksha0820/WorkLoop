@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import teamLeadRoutes from './routes/teamLeadRoutes.js';
+import employeeRoutes from './routes/employeeRoutes.js';
 import cors from 'cors';
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use("/api/teamlead", teamLeadRoutes);
+app.use('/api/employee', employeeRoutes);
 
 
 const PORT = process.env.PORT || 5000;
