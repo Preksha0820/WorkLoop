@@ -10,7 +10,8 @@ const getAllEmployees = async (req, res) => {
     const employees = await prisma.user.findMany({
       where: {
         role: 'EMPLOYEE',
-        teamLeadId: teamLeadId
+        teamLeadId: teamLeadId,
+        companyId: req.user.companyId,
       },
       select: {
         id: true,
@@ -47,7 +48,8 @@ const assignTaskToEmployee = async (req, res) => {
       where: {
         id: parsedAssignedToId,
         role: 'EMPLOYEE',
-        teamLeadId: teamLeadId
+        teamLeadId: teamLeadId,
+        companyId: req.user.companyId,
       }
     });
 
@@ -79,7 +81,7 @@ const getAllAssignedTasks = async (req, res) => {
     const teamLeadId = parseInt(req.user.id);
 
     const tasks = await prisma.task.findMany({
-      where: { assignedById: teamLeadId },
+      where: { assignedById: teamLeadId , assignedBy: { companyId: req.user.companyId }},
       include: {
         assignedTo: {
           select: {
@@ -118,7 +120,11 @@ const updateReportStatus = async (req, res) => {
       },
     });
 
-    if (!report || report.user.teamLeadId !== teamLeadId) {
+    if (
+      !report ||
+      report.user.teamLeadId !== teamLeadId ||
+      report.user.companyId !== req.user.companyId 
+    ) {
       return res.status(403).json({ message: "Not authorized to update this report" });
     }
 
@@ -151,7 +157,7 @@ const deleteEmployeeById = async (req, res) => {
       where: { id: employeeId },
     });
 
-    if (!employee || employee.role !== Role.EMPLOYEE) {
+    if (!employee || employee.role !== Role.EMPLOYEE || employee.companyId !== req.user.companyId) {
       return res.status(404).json({ message: 'Employee not found or not an employee' });
     }
 
