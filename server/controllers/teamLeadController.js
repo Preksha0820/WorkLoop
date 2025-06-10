@@ -1,5 +1,6 @@
 import prisma from '../prisma.js';
 import { Role } from '@prisma/client';
+import { notifyEmployeeOnReportReview } from "../sockets/notifications.js";
 
 
 //Get all employees for team lead
@@ -101,6 +102,7 @@ const getAllAssignedTasks = async (req, res) => {
   }
 };
 
+//report review
 const updateReportStatus = async (req, res) => {
   try {
     const { reportId } = req.params;
@@ -125,9 +127,10 @@ const updateReportStatus = async (req, res) => {
     const updatedReport = await prisma.report.update({
       where: { id: report.id },
       data: {
-        status
+        status,
       },
     });
+    notifyEmployeeOnReportReview(report.userId, updatedReport);
 
     res.status(200).json({ message: "Report status updated", report: updatedReport });
   } catch (err) {
@@ -135,7 +138,6 @@ const updateReportStatus = async (req, res) => {
     res.status(500).json({ message: "Failed to update report" });
   }
 };
-
 
 const deleteEmployeeById = async (req, res) => {
   try {

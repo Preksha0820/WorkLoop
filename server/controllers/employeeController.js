@@ -1,8 +1,9 @@
-import prisma from '../prisma.js';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
+import prisma from "../prisma.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { v4 as uuidv4 } from "uuid";
+import { notifyTeamLeadOnReportSubmission } from "../sockets/notifications.js";
 
 // Get Assigned Tasks
 export const getAssignedTasks = async (req, res) => {
@@ -11,13 +12,13 @@ export const getAssignedTasks = async (req, res) => {
 
     const tasks = await prisma.task.findMany({
       where: { assignedToId: userId },
-      orderBy: { deadline: 'asc' },
+      orderBy: { deadline: "asc" },
     });
 
     res.status(200).json({ tasks });
   } catch (err) {
-    console.error('Error fetching tasks:', err);
-    res.status(500).json({ message: 'Failed to fetch tasks' });
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({ message: "Failed to fetch tasks" });
   }
 };
 
@@ -29,7 +30,9 @@ export const submitReport = async (req, res) => {
 
     // Validate required fields
     if (!content || !taskId) {
-      return res.status(400).json({ message: 'Content and taskId are required' });
+      return res
+        .status(400)
+        .json({ message: "Content and taskId are required" });
     }
 
     // Optional: Check if the task exists and is assigned to this user
@@ -41,7 +44,9 @@ export const submitReport = async (req, res) => {
     });
 
     if (!task) {
-      return res.status(403).json({ message: "Invalid task ID or task not assigned to you" });
+      return res
+        .status(403)
+        .json({ message: "Invalid task ID or task not assigned to you" });
     }
 
     // Handle file upload (if any)
@@ -59,11 +64,17 @@ export const submitReport = async (req, res) => {
         fileURL,
       },
     });
+    // Find user's team lead id to notify
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
-    res.status(201).json({ message: 'Report submitted successfully', report });
+    if (user?.teamLeadId) {
+      notifyTeamLeadOnReportSubmission(user.teamLeadId, report);
+    }
+
+    res.status(201).json({ message: "Report submitted successfully", report });
   } catch (err) {
-    console.error('Error submitting report:', err);
-    res.status(500).json({ message: 'Failed to submit report' });
+    console.error("Error submitting report:", err);
+    res.status(500).json({ message: "Failed to submit report" });
   }
 };
 
@@ -77,13 +88,13 @@ export const getAllReports = async (req, res) => {
       include: {
         task: true, // to show associated task details
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     res.status(200).json({ reports });
   } catch (err) {
-    console.error('Error fetching reports:', err);
-    res.status(500).json({ message: 'Failed to fetch reports' });
+    console.error("Error fetching reports:", err);
+    res.status(500).json({ message: "Failed to fetch reports" });
   }
 };
 
@@ -99,11 +110,15 @@ export const editReport = async (req, res) => {
     });
 
     if (!report || report.userId !== userId) {
-      return res.status(404).json({ message: 'Report not found or unauthorized' });
+      return res
+        .status(404)
+        .json({ message: "Report not found or unauthorized" });
     }
 
-    if (report.status !== 'PENDING') {
-      return res.status(400).json({ message: 'Only PENDING reports can be edited' });
+    if (report.status !== "PENDING") {
+      return res
+        .status(400)
+        .json({ message: "Only PENDING reports can be edited" });
     }
 
     const updated = await prisma.report.update({
@@ -111,10 +126,10 @@ export const editReport = async (req, res) => {
       data: { content },
     });
 
-    res.status(200).json({ message: 'Report updated successfully', updated });
+    res.status(200).json({ message: "Report updated successfully", updated });
   } catch (err) {
-    console.error('Error editing report:', err);
-    res.status(500).json({ message: 'Failed to update report' });
+    console.error("Error editing report:", err);
+    res.status(500).json({ message: "Failed to update report" });
   }
 };
 
@@ -127,15 +142,17 @@ export const deleteReport = async (req, res) => {
     const report = await prisma.report.findUnique({ where: { id: reportId } });
 
     if (!report || report.userId !== userId) {
-      return res.status(404).json({ message: 'Report not found or unauthorized' });
+      return res
+        .status(404)
+        .json({ message: "Report not found or unauthorized" });
     }
 
     await prisma.report.delete({ where: { id: reportId } });
 
-    res.status(200).json({ message: 'Report deleted successfully' });
+    res.status(200).json({ message: "Report deleted successfully" });
   } catch (err) {
-    console.error('Error deleting report:', err);
-    res.status(500).json({ message: 'Failed to delete report' });
+    console.error("Error deleting report:", err);
+    res.status(500).json({ message: "Failed to delete report" });
   }
 };
 
@@ -158,21 +175,22 @@ export const getTaskById = async (req, res) => {
     });
 
     if (!task) {
-      return res.status(404).json({ message: 'Task not found or unauthorized' });
+      return res
+        .status(404)
+        .json({ message: "Task not found or unauthorized" });
     }
 
     res.status(200).json({ task });
   } catch (err) {
-    console.error('Error fetching task:', err);
-    res.status(500).json({ message: 'Failed to fetch task' });
+    console.error("Error fetching task:", err);
+    res.status(500).json({ message: "Failed to fetch task" });
   }
 };
-
 
 // Multer Config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = 'uploads';
+    const uploadPath = "uploads";
     if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
     cb(null, uploadPath);
   },
