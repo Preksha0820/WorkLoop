@@ -7,20 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int      @id @default(autoincrement())
-  name        String
-  email       String   @unique
-  password    String
-  role        Role
-  teamLeadId  Int?     
-  teamLead    User?    @relation("TeamLead", fields: [teamLeadId], references: [id])
-  teamMembers User[]   @relation("TeamLead")
-  reports     Report[]
-  assignedTasks Task[] @relation("AssignedTo")
-  givenTasks    Task[] @relation("AssignedBy")
-  createdAt   DateTime @default(now())
+model Company {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  domain   String?
+  users   User[]
+  createdAt DateTime @default(now())
 }
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  phone        String?
+  password     String
+  role         Role
+  teamLeadId   Int?
+  teamLead     User?     @relation("TeamLead", fields: [teamLeadId], references: [id])
+  teamMembers  User[]    @relation("TeamLead")
+  adminId      Int?
+  admin        User?     @relation("AdminLead", fields: [adminId], references: [id])
+  leads        User[]    @relation("AdminLead")
+  companyId    Int
+  company      Company   @relation(fields: [companyId], references: [id])
+  reports      Report[]
+  assignedTasks Task[]   @relation("AssignedTo")
+  givenTasks    Task[]   @relation("AssignedBy")
+  createdAt    DateTime  @default(now())
+}
+
 
 model Report {
   id         Int          @id @default(autoincrement())
@@ -36,23 +51,23 @@ model Report {
   @@unique([userId, reportDate]) // Prevent duplicate reports for same user on same date
 }
 
-
 model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  assignedTo  User     @relation("AssignedTo", fields: [assignedToId], references: [id])
-  assignedToId Int
-  assignedBy  User     @relation("AssignedBy", fields: [assignedById], references: [id])
-  assignedById Int
-  deadline    DateTime
-  status      TaskStatus @default(PENDING)
-  createdAt   DateTime @default(now())
+  id            Int        @id @default(autoincrement())
+  title         String
+  description   String
+  assignedTo    User       @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedToId  Int
+  assignedBy    User       @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedById  Int
+  deadline      DateTime
+  status        TaskStatus @default(PENDING)
+  createdAt     DateTime   @default(now())
 }
 
 enum Role {
-  EMPLOYEE
+  ADMIN
   TEAM_LEAD
+  EMPLOYEE
 }
 
 enum ReportStatus {
