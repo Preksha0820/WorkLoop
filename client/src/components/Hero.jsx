@@ -1,7 +1,7 @@
 // src/components/Hero.jsx
 export default function Hero() {
   return (
-    <section className="flex flex-col md:flex-row items-center justify-between px-16 py-16 gap-20 bg-slate-50">
+    <section className="flex flex-col md:flex-row items-center justify-between px-16 mt-20 mb-10 gap-20 bg-slate-50 " >
       <div className="md:w-1/2 space-y-4">
         <h1 className="text-4xl font-bold">
           <span className="text-pink-500">Simplify.</span>{" "}

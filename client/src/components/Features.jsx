@@ -1,8 +1,8 @@
 const features = [
   { icon: "/icons/task.png", title: "Task Management" },
-  { icon: "/icons/a1.png", title: "Attendance with Leave Management" },
+  { icon: "/icons/a1.png", title: "Attendance" },
   { icon: "/icons/a2.png", title: "Dashboard" },
-  { icon: "/icons/a3.png", title: "WhatsApp Notification" },
+  { icon: "/icons/a3.png", title: "Notification" },
   { icon: "/icons/a4.png", title: "Ease of Integration" },
   { icon: "/icons/alarm.png", title: "Time Sheets" },
   { icon: "/icons/calendar.png", title: "Calendar" },
@@ -20,14 +20,14 @@ export default function Features() {
         Features that bring in Productivity Enhancement
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {features.map((feature, index) => (
           <div
             key={index}
-            className="flex items-center p-0 rounded-full overflow-hidden shadow-md bg-[#bba2fa] w-full max-w-md"
+            className="flex items-center p-0 rounded-full overflow-hidden shadow-md bg-[#bdc0da] w-full max-w-md"
           >
             {/* Left Circular Icon */}
-            <div className="w-20 h-20 bg-[#d5c4f2] flex items-center justify-center rounded-full flex-shrink-0">
+            <div className="w-20 h-20 bg-[#bfd6f8] flex items-center justify-center rounded-full flex-shrink-0">
               <img src={feature.icon} alt="icon" className="w-12 h-12" />
             </div>
 

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { generateToken } from '../utils/auth.js';
 import { Role } from '@prisma/client';
 
+
 export const signup = async (req, res) => {
   const { name, email, password, role, companyName, companyId, teamLeadId } = req.body;
 
