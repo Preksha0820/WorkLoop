@@ -1,9 +1,9 @@
 import { useState } from "react";
-import AuthForm from "../components/AuthForm";
+import AuthForm from "../components/common/AuthForm";
 
 export default function AuthPage() {
   const [isSignup, setIsSignup] = useState(false);
-
+  
   return (
     <div className="flex min-h-screen">
       {/* Left Side Graphic */}

@@ -10,9 +10,17 @@ import { startReminderJobs } from "./sockets/reminders.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  credentials: true,
+}));
+
+
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(express.json());
 app.use(router);
+
 
 const server = http.createServer(app); // Create HTTP server
 
