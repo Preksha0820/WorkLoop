@@ -11,7 +11,7 @@ export default function Navbar() {
       {/* Menu Items */}
       <ul className="hidden md:flex gap-6 text-blue-900 font-semibold">
         <li><Link to="/">Home</Link></li>
-        <li><a href="#features">Features</a></li>
+        <li><Link to="/features">Features</Link></li>
         <li><a href="#clients">Clients</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#blog">Blog</a></li>

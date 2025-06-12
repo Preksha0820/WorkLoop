@@ -8,6 +8,7 @@ import Features from "./components/Features.jsx";
 import Footer from "./components/Footer.jsx";
 import Inside from "./components/Inside.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
+import FeaturesPage from "./pages/Features.jsx";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           }
         />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/features" element={<FeaturesPage />} />
       </Routes>
     </div>
   );

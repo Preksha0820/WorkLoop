@@ -6,7 +6,6 @@ export default function AuthPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Side Graphic */}
       <div className="hidden md:flex w-1/2 bg-blue-900 text-white items-center justify-center p-10">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Welcome to WorkLoop</h1>
@@ -26,10 +25,9 @@ export default function AuthPage() {
               Login
             </button>
             <button
-              className={`w-1/2 py-2 rounded-r-md ${isSignup ? "bg-blue-900 text-white" : "bg-gray-200"}`}
+              className={`w-1/2 py-2 rounded-r-md ${isSignup ? "bg-blue-900 text-white" : "bg-gray-200"}`}  
               onClick={() => setIsSignup(true)}
-            >
-              Signup
+            >Signup
             </button>
           </div>
           <AuthForm isSignup={isSignup} />
