@@ -8,20 +8,20 @@ import PrivateRoute from "./components/common/PrivateRoute";
 
 export default function App() {
   return (
-    <div className="font-sans">
+    <div className="min-h-screen flex flex-col font-sans">
       <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/auth" element={<AuthPage />} />
-
-      
-        <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/profile" element={<Profile />} /> */}
-        </Route>
-      </Routes>
+      {/* Add padding top to account for fixed navbar height */}
+      <main className="flex-grow"> 
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+        </Routes>
+      </main>
       <Footer />
     </div>
   );
-}
+} 
+

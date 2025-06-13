@@ -21,8 +21,13 @@
     };
 
     const signup = async (formData) => {
-      const res = await apiService.post("/auth/signup", formData);
-      return res.data;
+      try {
+        const res = await apiService.post("/auth/signup", formData);
+        return res.data;
+      } catch (err) {
+        console.error("Signup failed:", err.response?.data || err.message);
+        throw err;
+      }
     };
 
     const logout = () => {
@@ -30,21 +35,21 @@
       setUser(null);
     };
 
-    // const getProfile = async () => {
-    //   try {
-    //     const res = await apiService.get("/auth/me");
-    //     setUser(res.data);
-    //   } catch {
-    //     logout();
-    //   } finally {
-    //     setLoading(false); // done loading
-    //   }
-    // };
+    const getProfile = async () => {
+      try {
+        const res = await apiService.get("/auth/me");
+        setUser(res.data);
+      } catch {
+        logout();
+      } finally {
+        setLoading(false); // done loading
+      }
+    };
 
     useEffect(() => {
       const token = localStorage.getItem("authToken");
       if (token) {
-        // getProfile();
+        getProfile();
       } else {
         setLoading(false); // no token, no need to load
       }
