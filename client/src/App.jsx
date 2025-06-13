@@ -5,6 +5,7 @@ import AuthPage from "./pages/AuthPage";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard/employeeDashboard";
 import PrivateRoute from "./components/common/PrivateRoute";
+import Features from "./components/HomeComponents/Features";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/features" element={<Features />} />
 
       
         <Route element={<PrivateRoute />}>
