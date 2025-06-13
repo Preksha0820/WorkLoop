@@ -26,14 +26,12 @@ export default function AuthForm({ isSignup }) {
     try {
       if (isSignup) {
         const res = await signup(formData);
-        alert("Signup successful");
         navigate("/dashboard"); 
         console.log(res);
       } else {
         console.log("Logging in with:", formData.email, formData.password);
         await login(formData.email, formData.password);
         navigate("/dashboard"); 
-        alert("Login successful");
       }
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong");

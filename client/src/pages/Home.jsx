@@ -1,23 +1,26 @@
-import React from 'react'
-import Hero from '../components/HomeComponents/Hero'
-import Inside from '../components/HomeComponents/Inside'
-import Companies from '../components/HomeComponents/Companies'
-import Demo from '../components/HomeComponents/Demo'
-import Features from '../components/HomeComponents/Features'
-
+import React from 'react';
+import { Hero, Inside, Features, Companies, Demo } from '../components/HomeComponents';
 
 const Home = () => {
   return (
     <div>
-      
-              <Hero />
-              <Inside />
-              <Companies />
-              <Demo />
-              <Features />
-              
+      <div id="hero">
+        <Hero />
+      </div>
+      <div id="inside">
+        <Inside />
+      </div>
+      <div id="companies">
+        <Companies />
+      </div>
+      <div id="features">
+        <Features />
+      </div>
+      <div id="book-demo">
+        <Demo />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
