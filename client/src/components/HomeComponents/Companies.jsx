@@ -15,7 +15,7 @@ export default function Companies() {
               key={index}
               src={`/logos/${logo}`}
               alt={`Client ${index}`}
-              className="w-32 h-32 rounded-full border p-2 shadow-md inline-block hover:scale-105 transition duration-300 cursor-pointer"
+              className="w-22 h-20 rounded-full border p-2 shadow-md inline-block hover:scale-105 transition duration-300 cursor-pointer"
             />
           ))}
         </div>

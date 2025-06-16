@@ -11,7 +11,16 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/dashboard");
+   
+      if (user.role === "EMPLOYEE") {
+        navigate("/employeeDashboard");
+      } else if (user.role === "TEAM_LEAD") {
+        navigate("/teamLeadDashboard");
+      } else if (user.role === "ADMIN") {
+        navigate("/adminDashboard");
+      } else {
+        navigate("/"); 
+      }
     }
   }, [user, loading, navigate]);
 
@@ -90,13 +99,8 @@ export default function AuthPage() {
           {/* Auth Toggle */}
           <div className="bg-gray-100 p-1 rounded-xl mb-8 shadow-inner">
             <button
-              className={`w-1/2 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
-                !isSignup 
-                  ? "bg-white text-blue-900 shadow-md transform scale-105" 
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-              onClick={() => setIsSignup(false)}
-            >
+             onClick={() => setIsSignup(false)}  className={`w-1/2 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+                !isSignup ? "bg-white text-blue-900 shadow-md transform scale-105" : "text-gray-600 hover:text-gray-800" }`} >
               Login
             </button>
             <button
@@ -133,8 +137,7 @@ export default function AuthPage() {
                 {isSignup ? "Already have an account? " : "Don't have an account? "}
                 <button
                   onClick={() => setIsSignup(!isSignup)}
-                  className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
-                >
+                  className="text-blue-600 hover:text-blue-700 font-medium hover:underline">
                   {isSignup ? "Sign in here" : "Sign up here"}
                 </button>
               </p>

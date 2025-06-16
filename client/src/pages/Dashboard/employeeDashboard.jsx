@@ -1,13 +1,20 @@
-import React from 'react'
-import Hero from '../../components/HomeComponents/Hero'
+import { Sidebar } from '../../components/employee/Sidebar.jsx';
+import { Outlet } from "react-router-dom";
 
-const employeeDashboard = () => {
+function EmployeeDashboard() {
   return (
-    <div>
-       <h1 className="text-2xl font-bold mb-4">Employee Dashboard</h1>
-       <Hero />
+    <div className="flex min-h-screen relative">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex-grow p-6 bg-gray-50 relative r-19">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <Outlet />
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default employeeDashboard
+export default EmployeeDashboard;

@@ -83,9 +83,9 @@ export const getAllReports = async (req, res) => {
 
     const reports = await prisma.report.findMany({
       where: { userId },
-      include: {
-        task: true, // to show associated task details
-      },
+      // include: {
+      //   task: true,
+      // },
       orderBy: { createdAt: 'desc' },
     });
 
