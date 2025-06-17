@@ -146,6 +146,34 @@ const updateReportStatus = async (req, res) => {
   }
 };
 
+//get all team reports
+const getAllTeamReports = async (req, res) => {
+  try {
+    const teamLeadId = req.user.id;
+
+    // Find all reports by employees assigned to this team lead
+    const reports = await prisma.report.findMany({
+      where: {
+        user: {
+          teamLeadId: teamLeadId
+        }
+      },
+      include: {
+        user: true,    // include employee details
+        task: true     // if you want associated task info
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    res.status(200).json({ reports });
+  } catch (err) {
+    console.error("Error fetching team reports:", err);
+    res.status(500).json({ message: "Failed to fetch team reports" });
+  }
+};
+
 const deleteEmployeeById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -192,5 +220,6 @@ export {
     updateReportStatus,
     deleteEmployeeById,
     getAllAssignedTasks,
+    getAllTeamReports,
 }
   
