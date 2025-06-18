@@ -16,13 +16,12 @@ import TeamLeadDashboard from "./pages/Dashboard/teamLeadDashboard";
 export default function App() {
   const location = useLocation();
 
-  const isDashboardRoute = location.pathname.startsWith("/employeeDashboard") ||
-                           location.pathname.startsWith("/adminDashboard") ||
-                           location.pathname.startsWith("/teamLeadDashboard");
+    const isDashboardRoute = location.pathname.startsWith("/employeeDashboard") ||
+                             location.pathname.startsWith("/adminDashboard") ||
+                             location.pathname.startsWith("/teamLeadDashboard");
 
-  const isAuthPage = location.pathname === "/auth";
-
-  const hideFooter = isDashboardRoute || isAuthPage;
+    const isAuthPage = location.pathname === "/auth";
+    const hideFooter = isDashboardRoute || isAuthPage;
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
