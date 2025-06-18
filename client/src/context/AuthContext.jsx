@@ -38,11 +38,16 @@
 
     const getProfile = async () => {
       try {
-        const res = await apiService.get("/auth/me");
+        const res = await apiService.get("/auth/curr-user");
         setUser(res.data);
-      } catch {
-        logout();
-      } finally {
+      } catch (err) {
+        if (err.response?.status === 401) {
+          logout(); // only log out if token is invalid/unauthorized
+        } else {
+          console.error("Profile fetch error:", err);
+        } 
+        }
+        finally {
         setLoading(false); // done loading
       }
     };

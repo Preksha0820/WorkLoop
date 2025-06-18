@@ -18,3 +18,12 @@ export const notifyEmployeeOnReportReview = (employeeId, report) => {
     report,
   });
 };
+
+export const notifyEmployeeOnTaskAssignment = (employeeId, task) => {
+  const io = getIO();
+
+  io.to(`employee_${employeeId}`).emit("taskAssigned", {
+    message: "New task assigned",
+    task,
+  });
+};

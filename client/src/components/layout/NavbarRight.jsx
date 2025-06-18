@@ -75,9 +75,7 @@ export default function NavbarRight() {
     } else {
       return [
         ...baseItems,
-        { icon: CheckSquare, label: "My Tasks", action: () => navigate("/employee/tasks"), description: "View your assigned tasks" },
-        { icon: Activity, label: "Task Progress", action: () => navigate("/employee/progress"), description: "Track your progress" },
-        { icon: FileText, label: "Task History", action: () => navigate("/employee/history"), description: "View completed tasks" },
+        { icon: CheckSquare, label: "My Tasks", action: () => navigate("/employeeDashboard"), description: "View your assigned tasks" },
         { icon: Settings, label: "Settings", action: () => navigate("/settings"), description: "Personal settings" },
       ];
     }

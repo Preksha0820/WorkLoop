@@ -3,6 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import { notifyTeamLeadOnReportSubmission } from '../sockets/notifications.js';
+import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
 
 // Get Assigned Tasks
 export const getAssignedTasks = async (req, res) => {
@@ -29,9 +31,9 @@ export const submitReport = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
     const { content, taskId } = req.body;
-
+    console.log('Received report submission:', { userId, content, taskId , file: req.file });
     // Validate required fields
-    if (!content || !taskId) {
+    if (!content || !taskId) {  
       return res.status(400).json({ message: 'Content and taskId are required' });
     }
 
@@ -59,7 +61,7 @@ export const submitReport = async (req, res) => {
         userId,
         taskId: parseInt(taskId),
         content,
-        fileURL,
+        fileURL: fileURL || null, 
       },
     });
     // Find user's team lead id to notify
@@ -74,7 +76,7 @@ export const submitReport = async (req, res) => {
     console.error('Error submitting report:', err);
     res.status(500).json({ message: 'Failed to submit report' });
   }
-};
+}
 
 //get all submitted reports by employees
 export const getAllReports = async (req, res) => {
@@ -83,9 +85,9 @@ export const getAllReports = async (req, res) => {
 
     const reports = await prisma.report.findMany({
       where: { userId },
-      // include: {
-      //   task: true,
-      // },
+      include: {
+        task: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -190,6 +192,52 @@ const storage = multer.diskStorage({
     cb(null, uniqueName);
   },
 });
+
+
+export const reportStats = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    const now = new Date();
+
+    const todayStart = startOfDay(now);
+    const todayEnd = endOfDay(now);
+
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 }); 
+    const weekEnd = endOfWeek(now, { weekStartsOn: 1 });     
+
+    const [todayReports, weekReports] = await Promise.all([
+      prisma.report.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      prisma.report.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: weekStart,
+            lte: weekEnd,
+          },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      todayCount: todayReports.length,
+      weekCount: weekReports.length,
+      todayReports,
+      weekReports,
+    });
+  } catch (err) {
+    console.error("Error fetching report stats:", err);
+    res.status(500).json({ message: "Failed to fetch report stats" });
+  }
+};
+
 
 export const upload = multer({ storage });
 

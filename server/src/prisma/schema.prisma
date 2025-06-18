@@ -41,6 +41,8 @@ model Report {
   id         Int          @id @default(autoincrement())
   user       User         @relation(fields: [userId], references: [id])
   userId     Int
+  task       Task         @relation(fields: [taskId], references: [id])
+  taskId     Int          
   reportDate DateTime     @default(now())
   content    String
   fileURL    String?
@@ -48,8 +50,9 @@ model Report {
   comment    String?
   createdAt  DateTime     @default(now())
 
-  @@unique([userId, reportDate]) // Prevent duplicate reports for same user on same date
+  @@unique([userId, reportDate])
 }
+
 
 model Task {
   id            Int        @id @default(autoincrement())
@@ -62,6 +65,7 @@ model Task {
   deadline      DateTime
   status        TaskStatus @default(PENDING)
   createdAt     DateTime   @default(now())
+  reports       Report[] 
 }
 
 enum Role {

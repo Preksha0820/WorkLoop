@@ -50,7 +50,7 @@ export default function App() {
           <Route element={<PrivateRoute />}>
             {/* Employee Dashboard */}
             <Route path="/employeeDashboard" element={<EmployeeDashboard />}>
-              <Route path="quick-stats" element={<QuickStats />} />
+              <Route path="" element={<QuickStats />} />
               <Route path="my-tasks" element={<MyTasks />} />
               <Route path="my-reports" element={<MyReports />} />
               <Route path="notifications" element={<Notifications />} />

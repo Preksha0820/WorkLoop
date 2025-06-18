@@ -1,7 +1,7 @@
 import prisma from '../prisma.js';
 import { Role } from '@prisma/client';
 
-import { notifyEmployeeOnReportReview } from "../sockets/notifications.js";
+import { notifyEmployeeOnReportReview ,notifyEmployeeOnTaskAssignment} from "../sockets/notifications.js";
 
 
 //Get all employees for team lead
@@ -69,7 +69,9 @@ const assignTaskToEmployee = async (req, res) => {
         assignedById: teamLeadId
       }
     });
-
+    
+    notifyEmployeeOnTaskAssignment(parsedAssignedToId, task);
+    
     res.status(201).json({ message: "Task assigned successfully", task });
   } catch (err) {
     console.error("Error assigning task:", err);

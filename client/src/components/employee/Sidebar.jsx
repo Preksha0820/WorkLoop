@@ -16,15 +16,15 @@ export const Sidebar = () => {
 
       {/* Navigation */}
       <nav className="flex flex-col gap-3">
-        <NavLink
-          to="/employeeDashboard/quick-stats"
+      <NavLink
+          to="/employeeDashboard"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
           }
         >
           Quick Stats
         </NavLink>
-        <NavLink
+      <NavLink
           to="/employeeDashboard/my-tasks"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
@@ -40,6 +40,7 @@ export const Sidebar = () => {
         >
           My Reports
         </NavLink>
+      
         <NavLink
           to="/employeeDashboard/notifications"
           className={({ isActive }) =>
