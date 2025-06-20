@@ -10,13 +10,26 @@ import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
 export const getAssignedTasks = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
+    
+    const user = await prisma.user.findUnique({where:{id: userId}});
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (!user.companyId) {
+      return res.status(400).json({ message: 'Missing company ID in user' });
+    }
+    
 
     const tasks = await prisma.task.findMany({
       where: {
         assignedToId: userId,
-        assignedTo: { companyId: req.user.companyId }
+        assignedTo: {
+          companyId: user.companyId,
+        }
       },
-      orderBy: { deadline: 'asc' },
+      orderBy: {
+        deadline: 'asc',
+      },
     });
 
     res.status(200).json({ tasks });
@@ -26,46 +39,31 @@ export const getAssignedTasks = async (req, res) => {
   }
 };
 
-// Submit Daily Work Report
+
 export const submitReport = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
-    const { content, taskId } = req.body;
-    console.log('Received report submission:', { userId, content, taskId , file: req.file });
-    // Validate required fields
-    if (!content || !taskId) {  
-      return res.status(400).json({ message: 'Content and taskId are required' });
+    const { content } = req.body;
+
+    if (!content) {
+      return res.status(400).json({ message: 'Report content is required' });
     }
 
-    // Optional: Check if the task exists and is assigned to this user
-    const task = await prisma.task.findFirst({
-      where: {
-        id: parseInt(taskId),
-        assignedToId: userId,
-      },
-    });
 
-    if (!task) {
-      return res.status(403).json({ message: "Invalid task ID or task not assigned to you" });
-    }
-
-    // Handle file upload (if any)
     let fileURL = null;
     if (req.file) {
       fileURL = `/uploads/${req.file.filename}`;
     }
 
-    // Create report
     const report = await prisma.report.create({
       data: {
         userId,
-        taskId: parseInt(taskId),
         content,
-        fileURL: fileURL || null, 
+        fileURL,
       },
     });
-    // Find user's team lead id to notify
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    const user = await prisma.user.findUnique({where: { id: userId } });
 
     if (user?.teamLeadId) {
       notifyTeamLeadOnReportSubmission(user.teamLeadId, report);
@@ -76,7 +74,9 @@ export const submitReport = async (req, res) => {
     console.error('Error submitting report:', err);
     res.status(500).json({ message: 'Failed to submit report' });
   }
-}
+};
+
+
 
 //get all submitted reports by employees
 export const getAllReports = async (req, res) => {
@@ -85,9 +85,6 @@ export const getAllReports = async (req, res) => {
 
     const reports = await prisma.report.findMany({
       where: { userId },
-      include: {
-        task: true,
-      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -193,7 +190,6 @@ const storage = multer.diskStorage({
   },
 });
 
-
 export const reportStats = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
@@ -235,6 +231,46 @@ export const reportStats = async (req, res) => {
   } catch (err) {
     console.error("Error fetching report stats:", err);
     res.status(500).json({ message: "Failed to fetch report stats" });
+  }
+};
+
+export const updateTaskStatus = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    const taskId = req.params.taskId;
+    const { status } = req.body;
+
+    if (!taskId || !status) {
+      return res.status(400).json({ message: 'Task ID and status are required' });
+    }
+
+    const task = await prisma.task.findFirst({
+      where: {
+        id: parseInt(taskId),
+        assignedToId: userId,
+      },
+    });
+
+    if (!task) {
+      return res.status(403).json({ message: 'Task not found or not assigned to you' });
+    }
+
+    if (status !== 'COMPLETED' && status !== 'IN_PROGRESS' && status !== 'PENDING'){
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    const updatedTask = await prisma.task.update({
+      where: { id: task.id },
+      data: {
+        status,
+        completedAt: status === 'COMPLETED' ? new Date() : null,
+      },
+    });
+
+    res.status(200).json({ message: 'Task status updated successfully', task: updatedTask });
+  } catch (err) {
+    console.error('Error updating task status:', err);
+    res.status(500).json({ message: 'Failed to update task status' });
   }
 };
 

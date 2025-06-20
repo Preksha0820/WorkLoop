@@ -49,6 +49,14 @@ export const Sidebar = () => {
         >
           Notifications
         </NavLink>
+        <NavLink
+          to="/employeeDashboard/submit-report"
+          className={({ isActive }) =>
+            `${baseClass} ${isActive ? activeClass : inactiveClass}`
+          }
+        >
+          Submit Report
+        </NavLink>
       </nav>
     </aside>
   );

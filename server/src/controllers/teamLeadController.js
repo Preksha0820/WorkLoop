@@ -99,7 +99,6 @@ const getAllAssignedTasks = async (req, res) => {
         createdAt: 'desc',
       },
     });
-
     res.status(200).json(tasks);
   } catch (err) {
     console.error("Error fetching tasks:", err);
@@ -107,46 +106,6 @@ const getAllAssignedTasks = async (req, res) => {
   }
 };
 
-//report review
-const updateReportStatus = async (req, res) => {
-  try {
-    const { reportId } = req.params;
-    const { status } = req.body;
-    const teamLeadId = parseInt(req.user.id);
-
-    if (!["APPROVED", "REJECTED"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
-    }
-
-    const report = await prisma.report.findUnique({
-      where: { id: parseInt(reportId) },
-      include: {
-        user: true,
-      },
-    });
-
-    if (
-      !report ||
-      report.user.teamLeadId !== teamLeadId ||
-      report.user.companyId !== req.user.companyId 
-    ) {
-      return res.status(403).json({ message: "Not authorized to update this report" });
-    }
-
-    const updatedReport = await prisma.report.update({
-      where: { id: report.id },
-      data: {
-        status,
-      },
-    });
-    notifyEmployeeOnReportReview(report.userId, updatedReport);
-
-    res.status(200).json({ message: "Report status updated", report: updatedReport });
-  } catch (err) {
-    console.error("Error updating report status:", err);
-    res.status(500).json({ message: "Failed to update report" });
-  }
-};
 
 //get all team reports
 const getAllTeamReports = async (req, res) => {
@@ -162,7 +121,6 @@ const getAllTeamReports = async (req, res) => {
       },
       include: {
         user: true,    // include employee details
-        task: true     // if you want associated task info
       },
       orderBy: {
         createdAt: 'desc'
@@ -219,7 +177,6 @@ const deleteEmployeeById = async (req, res) => {
 export {
     getAllEmployees,
     assignTaskToEmployee,
-    updateReportStatus,
     deleteEmployeeById,
     getAllAssignedTasks,
     getAllTeamReports,

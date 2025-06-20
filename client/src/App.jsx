@@ -8,12 +8,15 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import EmployeeDashboard from "./pages/Dashboard/employeeDashboard";
 import TeamLeadDashboard from "./pages/Dashboard/teamLeadDashboard";
 import AdminDashboard from "./pages/Dashboard/adminDashboard";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Employee Components
 import QuickStats from "./components/employee/QuickStats";
 import MyTasks from "./components/employee/MyTasks";
 import MyReports from "./components/employee/MyReports";
 import Notifications from "./components/employee/Notifications";
+import SubmitReport from "./components/employee/submitReport";
 
 // Team Lead Components
 import TLQuickStats from "./components/TeamLead/QuickStats";
@@ -54,6 +57,7 @@ export default function App() {
               <Route path="my-tasks" element={<MyTasks />} />
               <Route path="my-reports" element={<MyReports />} />
               <Route path="notifications" element={<Notifications />} />
+              <Route path="submit-report" element={<SubmitReport />} />
               <Route index element={<QuickStats />} />
             </Route>
 
@@ -73,7 +77,9 @@ export default function App() {
         </Routes>
       </main>
 
+      <ToastContainer position="top-right" autoClose={3000} />
       {!hideFooter && <Footer />}
+
     </div>
   );
 }

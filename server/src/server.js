@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import http from "http";
 import router from './routes/index.js'; 
 import cors from 'cors';
-
+import "./services/deleteCompletedTask.js"
 import { initSocket } from "./sockets/index.js";
 import { startReminderJobs } from "./sockets/reminders.js";
 
