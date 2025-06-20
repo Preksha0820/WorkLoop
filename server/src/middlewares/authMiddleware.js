@@ -2,16 +2,19 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const protect = (req, res, next) => {
-  let token = req.headers.authorization;
 
-  if (token && token.startsWith('Bearer ')) {
-    token = token.split(' ')[1];
+export const protect = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded; // contains id and role
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); // { id, role }
+      req.user = decoded; // Now req.user has id and role
       next();
     } catch (err) {
+      console.error('JWT verification failed:', err);
       return res.status(401).json({ message: 'Invalid token' });
     }
   } else {
@@ -21,9 +24,10 @@ export const protect = (req, res, next) => {
 
 export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!req.user || !roles.includes(req.user.role)) {
       return res.status(403).json({ message: 'Forbidden: Insufficient role' });
     }
     next();
   };
 };
+

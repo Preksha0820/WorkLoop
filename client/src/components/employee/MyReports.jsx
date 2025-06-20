@@ -266,7 +266,7 @@ export default function MyReports() {
                         <Eye className="w-5 h-5 group-hover:scale-110 transition-transform" />
                       </button>
                       
-                      {report.status === "PENDING" && (
+                      {report && (
                         <>
                           <button
                             onClick={() => handleEditReport(report)}

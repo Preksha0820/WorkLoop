@@ -57,8 +57,8 @@ export default function AuthPage() {
         <div className="relative z-10 flex flex-col justify-center items-center p-12 text-center">
           {/* Logo */}
           <div className="mb-8">
-            <div className="flex items-center justify-center w-20 h-20 bg-white rounded-2xl shadow-lg mb-4">
-              <div className="text-3xl font-bold text-blue-900">W</div>
+            <div className="flex items-center justify-center w-30 h-20 bg-white rounded-2xl shadow-lg mb-4">
+              <div className="text-3xl font-bold text-blue-900">Work Made Easier</div>
             </div>
             <h1 className="text-4xl font-bold mb-2">WorkLoop</h1>
             <p className="text-blue-200 text-lg">Where productivity meets simplicity</p>
