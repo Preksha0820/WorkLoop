@@ -26,6 +26,11 @@ import TLNotifications from "./components/TeamLead/Notifications";
 import ManageEmployees from "./components/TeamLead/ManageEmployees";
 import AssignTaskPage from "./components/TeamLead/AssignTasks";
 
+// Admin Components
+import MyEmployees from "./components/Admin/MyEmployees";
+import TeamGroups from "./components/Admin/TeamGroups";
+
+
 export default function App() {
   const location = useLocation();
 
@@ -73,8 +78,12 @@ export default function App() {
               <Route index element={<TLQuickStats />} />
             </Route>
 
-            {/* Admin Dashboard */}
-            <Route path="/adminDashboard" element={<AdminDashboard />} />
+            <Route path="/adminDashboard" element={<AdminDashboard/>}>
+          
+              <Route path="team-groups" element={<TeamGroups/>} />
+              <Route index element={<MyEmployees />} />
+            </Route>
+
           </Route>
         </Routes>
       </main>

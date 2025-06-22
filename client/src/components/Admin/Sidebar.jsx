@@ -13,12 +13,13 @@ export default function Sidebar() {
       <div className="w-full h-0.5 bg-white mb-6"></div>
 
       <nav className="flex flex-col gap-3">
-        <NavLink to="/adminLeadDashboard/quick-stats" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
-          My Team Leads
-        </NavLink>
-        <NavLink to="/teamLeadDashboard/manage-tasks" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
+      <NavLink to="/adminDashboard" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
           My Employees
         </NavLink>
+        <NavLink to="/adminDashboard/team-groups" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
+          Team Groups
+        </NavLink>
+       
       </nav>
     </aside>
   );

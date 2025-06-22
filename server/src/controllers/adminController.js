@@ -1,15 +1,35 @@
 import prisma from '../prisma.js';
 
 const getAllEmployeesInCompany = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10
+
   try {
+    const skip = (page - 1) * limit; // Calculate the number of records to skip
+    const take = parseInt(limit, 10); // Number of records to fetch
+
     const users = await prisma.user.findMany({
       where: {
         companyId: req.user.companyId,
-        role: { not: 'ADMIN' }, 
+        role: 'EMPLOYEE'
       },
       select: { id: true, name: true, email: true, role: true },
+      skip,
+      take,
     });
-    res.json(users);
+
+    const totalUsers = await prisma.user.count({
+      where: {
+        companyId: req.user.companyId,
+        role: { not: 'ADMIN' },
+      },
+    });
+
+    res.json({
+      users,
+      totalUsers,
+      totalPages: Math.ceil(totalUsers / limit),
+      currentPage: parseInt(page, 10),
+    });
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch users' });
   }
@@ -127,7 +147,53 @@ const changeEmployeeRole = async (req, res) => {
     res.status(500).json({ message: 'Failed to change employee role', error: error.message });
   }
 }
+const getEachEmployeeByTeam = async (req, res) => {
+  try {
+    const { companyId } = req.user;
 
+    // Fetch all team leads in the company
+    const teamLeads = await prisma.user.findMany({
+      where: {
+        role: 'TEAM_LEAD',
+        companyId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    // For each team lead, get their employees
+    const result = await Promise.all(
+      teamLeads.map(async (lead) => {
+        const employees = await prisma.user.findMany({
+          where: {
+            companyId,
+            teamLeadId: lead.id,
+            role: 'EMPLOYEE',
+          },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        });
+
+        return {
+          teamLead: lead,
+          employees,
+        };
+      })
+    );
+
+    res.status(200).json({ data: result });
+  } catch (err) {
+    console.error('Error fetching employees by team:', err);
+    res.status(500).json({ message: 'Failed to fetch employees by team' });
+  }
+};
+   
 
 export{
     getAllEmployeesInCompany,
@@ -135,4 +201,5 @@ export{
     deleteTeamLeadsById,
     switchEmployeeTeam,
     changeEmployeeRole,
+    getEachEmployeeByTeam
 }

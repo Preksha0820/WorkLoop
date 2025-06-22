@@ -56,27 +56,20 @@ export default function NavbarRight() {
     if (user?.role === "ADMIN") {
       return [
         ...baseItems,
-        { icon: Users, label: "All Employees", action: () => navigate("/admin/employees"), description: "Manage all employees" },
-        { icon: ClipboardList, label: "All Tasks", action: () => navigate("/admin/tasks"), description: "View and manage all tasks" },
-        { icon: BarChart3, label: "Analytics & Reports", action: () => navigate("/admin/analytics"), description: "View system analytics" },
-        { icon: Crown, label: "Admin Dashboard", action: () => navigate("/admin/dashboard"), description: "Administrative overview" },
+        { icon: Users, label: "All Employees", action: () => navigate("/adminDashboard"), description: "Manage all employees" },
         { icon: Settings, label: "System Settings", action: () => navigate("/admin/settings"), description: "Configure system settings" },
       ];
     } else if (user?.role === "TEAM_LEAD") {
       return [
         ...baseItems,
-        { icon: CheckSquare, label: "My Tasks", action: () => navigate("/tasks"), description: "View your assigned tasks" },
-        { icon: UserCheck, label: "Team Members", action: () => navigate("/team-lead/employees"), description: "Manage your team" },
-        { icon: ClipboardList, label: "Assigned Tasks", action: () => navigate("/team-lead/assigned-tasks"), description: "Tasks assigned to team" },
-        { icon: Activity, label: "Team Performance", action: () => navigate("/team-lead/performance"), description: "Track team progress" },
-        { icon: FileText, label: "Task Assignment", action: () => navigate("/team-lead/assign-tasks"), description: "Assign new tasks" },
-        { icon: Settings, label: "Settings", action: () => navigate("/settings"), description: "Personal settings" },
+        { icon: CheckSquare, label: "My Employees", action: () => navigate("/teamLeadDashboard"), description: "View your assigned tasks" },
+        { icon: Settings, label: "Settings", action: () => navigate("/team-Lead/settings"), description: "Personal settings" },
       ];
     } else {
       return [
         ...baseItems,
         { icon: CheckSquare, label: "My Tasks", action: () => navigate("/employeeDashboard"), description: "View your assigned tasks" },
-        { icon: Settings, label: "Settings", action: () => navigate("/settings"), description: "Personal settings" },
+        { icon: Settings, label: "Settings", action: () => navigate("/employee/settings"), description: "Personal settings" },
       ];
     }
   };
