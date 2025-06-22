@@ -10,7 +10,7 @@ export const initSocket = (server) => {
     },
   });
   io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+    //console.log("New client connected:", socket.id);
 
     // You can add more socket event listeners here if needed
     socket.on("disconnect", () => {
