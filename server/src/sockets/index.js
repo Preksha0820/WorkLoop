@@ -10,13 +10,23 @@ export const initSocket = (server) => {
     },
   });
   io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+  console.log("New client connected:", socket.id);
 
-    // You can add more socket event listeners here if needed
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
-    });
+  // Client joins their room
+  socket.on("joinRoom", ({ role, userId }) => {
+    if (role === "EMPLOYEE") {
+      socket.join(`employee_${userId}`);
+      console.log(`Employee ${userId} joined room employee_${userId}`);
+    } else if (role === "TEAM_LEAD") {
+      socket.join(`teamLead_${userId}`);
+      console.log(`Team lead ${userId} joined room teamLead_${userId}`);
+    }
   });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
+});
   return io;
 };
 
