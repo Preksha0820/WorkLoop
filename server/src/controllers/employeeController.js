@@ -39,7 +39,6 @@ export const getAssignedTasks = async (req, res) => {
   }
 };
 
-
 export const submitReport = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
@@ -67,6 +66,7 @@ export const submitReport = async (req, res) => {
 
     if (user?.teamLeadId) {
       notifyTeamLeadOnReportSubmission(user.teamLeadId, report);
+      console.log(`Notifying teamLead_${user.teamLeadId}`);
     }
 
     res.status(201).json({ message: 'Report submitted successfully', report });
@@ -75,8 +75,6 @@ export const submitReport = async (req, res) => {
     res.status(500).json({ message: 'Failed to submit report' });
   }
 };
-
-
 
 //get all submitted reports by employees
 export const getAllReports = async (req, res) => {

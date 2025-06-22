@@ -23,7 +23,7 @@ const getAllEmployees = async (req, res) => {
       }
     });
 
-    res.status(200).json(employees);
+    res.status(200).json({employees});
   } catch (err) {
     console.error('Error fetching employees:', err);
     res.status(500).json({ message: 'Error fetching employees' });
@@ -71,6 +71,7 @@ const assignTaskToEmployee = async (req, res) => {
     });
     
     notifyEmployeeOnTaskAssignment(parsedAssignedToId, task);
+    console.log(`Notifying employee_${parsedAssignedToId}`);
     
     res.status(201).json({ message: "Task assigned successfully", task });
   } catch (err) {
@@ -99,13 +100,12 @@ const getAllAssignedTasks = async (req, res) => {
         createdAt: 'desc',
       },
     });
-    res.status(200).json(tasks);
+    res.status(200).json({tasks});
   } catch (err) {
     console.error("Error fetching tasks:", err);
     res.status(500).json({ message: "Failed to fetch assigned tasks" });
   }
 };
-
 
 //get all team reports
 const getAllTeamReports = async (req, res) => {

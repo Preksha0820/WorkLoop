@@ -94,7 +94,7 @@ export default function QuickStats() {
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="font-medium text-gray-900">{`${label}`}</p>
           <p className="text-indigo-600">
-            {`${payload[0].dataKey}: ${payload[0].value}`}
+            {`{payload[0].dataKey}: ${payload[0].value}`}
           </p>
         </div>
       );
@@ -107,7 +107,7 @@ export default function QuickStats() {
       <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-300 rounded w-48"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"> 
             {[1, 2, 3, 4].map(i => (
               <div key={i} className="h-32 bg-gray-300 rounded-xl"></div>
             ))}
@@ -208,7 +208,7 @@ export default function QuickStats() {
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) =>` ${name} ${(percent * 100).toFixed(0)}%`}
                     dataKey="value"
                   >
                     <Cell fill={COLORS.completed} />
@@ -304,7 +304,7 @@ export default function QuickStats() {
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div 
               className="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-500"
-              style={{ width: `${Math.min((reportStats.weekCount / 7) * 100, 100)}%` }}
+              style={{ width:` ${Math.min((reportStats.weekCount / 7) * 100, 100)}%` }}
             ></div>
           </div>
           <p className="text-xs text-gray-500 mt-2">

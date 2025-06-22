@@ -24,6 +24,7 @@ import ManageTasks from "./components/TeamLead/ManageTasks";
 import TeamReports from "./components/TeamLead/TeamReports";
 import TLNotifications from "./components/TeamLead/Notifications";
 import ManageEmployees from "./components/TeamLead/ManageEmployees";
+import AssignTaskPage from "./components/TeamLead/AssignTasks";
 
 export default function App() {
   const location = useLocation();
@@ -67,6 +68,7 @@ export default function App() {
               <Route path="manage-tasks" element={<ManageTasks />} />
               <Route path="manage-employees" element={<ManageEmployees />} />
               <Route path="team-reports" element={<TeamReports />} />
+              <Route path="assign-task" element={<AssignTaskPage />} />
               <Route path="notifications" element={<TLNotifications />} />
               <Route index element={<TLQuickStats />} />
             </Route>
