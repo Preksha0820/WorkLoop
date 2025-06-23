@@ -33,7 +33,9 @@ export default function Sidebar() {
         <NavLink to="/teamLeadDashboard/manage-employees" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
           Manage Employees
         </NavLink>
-
+        <NavLink to="/teamLeadDashboard/chat" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
+          Chat With Employees
+        </NavLink>
         <NavLink to="/teamLeadDashboard/notifications" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
           Notifications
         </NavLink>

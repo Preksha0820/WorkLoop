@@ -1,4 +1,6 @@
 import { Server } from "socket.io";
+import prisma from "../prisma.js";
+
 let io;
 
 export const initSocket = (server) => {
@@ -9,30 +11,47 @@ export const initSocket = (server) => {
       credentials: true,
     },
   });
+
   io.on("connection", (socket) => {
-  console.log("New client connected:", socket.id);
+   // console.log("New client connected:", socket.id);
 
-  // Client joins their room
-  socket.on("joinRoom", ({ role, userId }) => {
-    if (role === "EMPLOYEE") {
-      socket.join(`employee_${userId}`);
-      console.log(`Employee ${userId} joined room employee_${userId}`);
-    } else if (role === "TEAM_LEAD") {
-      socket.join(`teamLead_${userId}`);
-      console.log(`Team lead ${userId} joined room teamLead_${userId}`);
-    }
+    socket.on("joinRoom", ({ role, userId }) => {
+      // Convert TEAM_LEAD to teamLead for room naming
+      const roomName = role === 'TEAM_LEAD' ? 'teamLead' : role.toLowerCase();
+      const room = `${roomName}_${userId}`;
+      socket.join(room);
+   //   console.log(`${role} ${userId} joined room ${room}`);
+    });
+
+    socket.on("send-message", async ({ senderId, receiverId, content }) => {
+      try {
+        //console.log("Sending message:", { senderId, receiverId, content });
+        const message = await prisma.chatMessage.create({
+          data: { senderId, receiverId, content },
+        });
+    
+       // console.log("Message saved to database:", message);
+        
+        // Emit to receiver (whether teamLead or employee)
+        io.to(`employee_${receiverId}`).emit("receive-message", message);
+        io.to(`teamLead_${receiverId}`).emit("receive-message", message);
+        
+       // console.log(`Emitted to rooms: employee_${receiverId}, teamLead_${receiverId}`);
+        
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    });
+    
+    socket.on("disconnect", () => {
+     // console.log("Client disconnected:", socket.id);
+    });
   });
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
-  });
-});
   return io;
 };
 
 export const getIO = () => {
-  if (!io) {
-    throw new Error("Socket.io not initialized!");
-  }
+  if (!io) throw new Error("Socket.io not initialized!");
   return io;
 };

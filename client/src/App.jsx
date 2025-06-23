@@ -17,6 +17,7 @@ import MyTasks from "./components/employee/MyTasks";
 import MyReports from "./components/employee/MyReports";
 import Notifications from "./components/employee/Notifications";
 import SubmitReport from "./components/employee/submitReport";
+import ChatTeamLead from "./components/employee/ChatTeamLead";
 
 // Team Lead Components
 import TLQuickStats from "./components/TeamLead/QuickStats";
@@ -25,6 +26,7 @@ import TeamReports from "./components/TeamLead/TeamReports";
 import TLNotifications from "./components/TeamLead/Notifications";
 import ManageEmployees from "./components/TeamLead/ManageEmployees";
 import AssignTaskPage from "./components/TeamLead/AssignTasks";
+import ChatWithEmployees from "./components/TeamLead/ChatWithEmployees";
 
 // Admin Components
 import MyEmployees from "./components/Admin/MyEmployees";
@@ -64,6 +66,7 @@ export default function App() {
               <Route path="my-reports" element={<MyReports />} />
               <Route path="notifications" element={<Notifications />} />
               <Route path="submit-report" element={<SubmitReport />} />
+              <Route path="chat" element={<ChatTeamLead />} />
               <Route index element={<QuickStats />} />
             </Route>
 
@@ -75,6 +78,7 @@ export default function App() {
               <Route path="team-reports" element={<TeamReports />} />
               <Route path="assign-task" element={<AssignTaskPage />} />
               <Route path="notifications" element={<TLNotifications />} />
+              <Route path="chat" element={<ChatWithEmployees/>}/>
               <Route index element={<TLQuickStats />} />
             </Route>
 

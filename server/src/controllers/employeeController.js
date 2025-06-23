@@ -272,6 +272,39 @@ export const updateTaskStatus = async (req, res) => {
   }
 };
 
+export const getTeamLead = async (req, res) => {
+  try {
+    const userId = parseInt(req.user?.id);
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is missing or invalid." });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        teamLead: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!user || !user.teamLead) {
+      return res.status(404).json({ error: "Team lead not found." });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching team lead:", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+
 
 export const upload = multer({ storage });
 
