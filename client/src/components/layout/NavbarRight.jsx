@@ -1,5 +1,5 @@
 // src/components/layout/NavbarRight.jsx
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, lazy } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -7,6 +7,7 @@ import {
   Shield, Users, BarChart3, UserCheck, ClipboardList,
   Activity, Crown, FileText
 } from "lucide-react";
+import { act } from "react";
 
 export default function NavbarRight() {
   const { user, logout } = useAuth();
@@ -81,6 +82,12 @@ export default function NavbarRight() {
     } else if (user?.role === "TEAM_LEAD") {
       return [
         ...baseItems,
+        {
+           icon: BarChart3,
+           label: "Tasks Overview",
+           action: () => navigate("/teamLeadDashboard/manage-tasks"),
+           description:" Manage your team members",
+        },
         {
           icon: Settings,
           label: "Settings",

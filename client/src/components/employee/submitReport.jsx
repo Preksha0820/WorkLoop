@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import apiService from "../../api/apiService";
+import { toast } from "react-toastify";
 
 export default function SubmitReport() {
     const [workSummary, setWorkSummary] = useState("");
@@ -56,7 +57,8 @@ export default function SubmitReport() {
         const response = await apiService.post("/employee/report", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-  
+        
+        toast.success("Report submitted successfully!");
         setSubmitSuccess(true);
         resetForm();
         

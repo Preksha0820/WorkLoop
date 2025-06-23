@@ -5,6 +5,11 @@ import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
 import bcrypt from 'bcryptjs';
+import { supabase } from '../utils/supabaseClient.js';
+
+
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
 
 // Get Assigned Tasks
 export const getAssignedTasks = async (req, res) => {
@@ -50,7 +55,23 @@ export const submitReport = async (req, res) => {
 
     let fileURL = null;
     if (req.file) {
-      fileURL = `/uploads/${req.file.filename}`;
+      const fileExt = req.file.originalname.split('.').pop();
+      const fileName = `reports/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+
+      const { error } = await supabase.storage
+        .from('report')
+        .upload(fileName, req.file.buffer, {
+          contentType: req.file.mimetype,
+        });
+
+      if (error) {
+        console.error('Supabase upload error:', error);
+        return res.status(500).json({ message: 'File upload failed' });
+      }
+
+      // Get public URL
+      const { data } = supabase.storage.from('reports').getPublicUrl(fileName);
+      fileURL = data.publicUrl;
     }
 
     const report = await prisma.report.create({
@@ -61,15 +82,12 @@ export const submitReport = async (req, res) => {
       },
     });
 
-    const user = await prisma.user.findUnique({where: { id: userId } });
-
     res.status(201).json({ message: 'Report submitted successfully', report });
   } catch (err) {
     console.error('Error submitting report:', err);
     res.status(500).json({ message: 'Failed to submit report' });
   }
 };
-
 //get all submitted reports by employees
 export const getAllReports = async (req, res) => {
   try {
@@ -170,17 +188,7 @@ export const getTaskById = async (req, res) => {
 };
 
 // Multer Config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = 'uploads';
-    if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  },
-});
+
 
 export const reportStats = async (req, res) => {
   try {
@@ -406,8 +414,5 @@ export const getTeamLead = async (req, res) => {
   }
 };
 
-
-
-export const upload = multer({ storage });
 
 
