@@ -112,13 +112,13 @@ const TeamGroup = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={toggleAllExpanded}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-400 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 <Filter className="w-4 h-4" />
                 {Object.values(expandedTeams).every(Boolean) ? 'Collapse All' : 'Expand All'}
               </button>
               
-              <div className="flex bg-gray-100 rounded-lg p-1">
+              <div className="flex bg-gray-300 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('card')}
                   className={`p-2 rounded-md transition-all duration-200 ${
@@ -153,7 +153,7 @@ const TeamGroup = () => {
             <input
               type="text"
               placeholder="Search teams, leads, or employees..."
-              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -176,14 +176,14 @@ const TeamGroup = () => {
             {filteredTeams.map((group, index) => (
               <div
                 key={group.teamLead.id}
-                className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+                className="bg-white rounded-2xl border border-gray-500 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
               >
                 {/* Team Lead Header */}
                 <div
-                  className="relative cursor-pointer group"
+                  className="relative cursor-pointer group "
                   onClick={() => toggleExpand(index)}
                 >
-                  <div className="absolute inset-0 bg-blue-400 opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to bg-purple-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative p-6 text-white">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">

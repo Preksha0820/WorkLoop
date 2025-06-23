@@ -60,7 +60,7 @@ const ChatTeamLead = () => {
     
     if (diffInHours < 24) {
       return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } else if (diffInHours < 168) { // 7 days
+    } else if (diffInHours < 168) { 
       return messageDate.toLocaleDateString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' });
     } else {
       return messageDate.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -318,9 +318,7 @@ const ChatTeamLead = () => {
             className={`p-3 rounded-full transition-all duration-200 ${
               newMessage.trim() 
                 ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
-          >
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
             <Send className="w-5 h-5" />
           </button>
         </div>

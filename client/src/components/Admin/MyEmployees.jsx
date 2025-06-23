@@ -197,7 +197,7 @@ const EmployeeManagementDashboard = () => {
                 placeholder={`Search ${activeTab}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -251,7 +251,7 @@ const EmployeeManagementDashboard = () => {
                                 setSelectedEmployee(employee);
                                 setShowRoleModal(true);
                               }}
-                              className="bg-purple-100 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                              className="bg-purple-200 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
                             >
                               <UserCog className="w-4 h-4" />
                               <span>Promote</span>

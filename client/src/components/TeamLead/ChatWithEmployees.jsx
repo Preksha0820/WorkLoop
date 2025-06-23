@@ -218,19 +218,17 @@ const ChatWithEmployees = () => {
     <div className="max-w-6xl mx-auto mt-6 mb-6 bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="flex h-[600px]">
         {/* Employee List Sidebar */}
-        <div 
-          className="bg-white border-r border-gray-200 flex flex-col"
-          style={{ width: `${sidebarWidth}px` }}
-        >
+        <div style={{ width: `${sidebarWidth}px` }}
+          className="bg-white border-r-2 border-gray-500 flex flex-col">
           {/* Sidebar Header */}
-          <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+          <div className="bg-white border-b border-gray-400 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                 <Users className="w-4 h-4 text-white" />
               </div>
               <h2 className="text-lg font-semibold text-gray-900">Your Employees</h2>
             </div>
-            <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="text-sm text-gray-700 bg-gray-100 px-2 py-1 rounded-full">
               {employees.length}
             </span>
           </div>
@@ -239,7 +237,7 @@ const ChatWithEmployees = () => {
           <div className="flex-1 overflow-y-auto">
             {employees.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4">
                   <Users className="w-8 h-8 text-gray-400" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No employees found</h3>
@@ -255,10 +253,8 @@ const ChatWithEmployees = () => {
                     onClick={() => handleSelect(emp)}
                     className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
                       selectedEmployee?.id === emp.id 
-                        ? 'bg-blue-50 border border-blue-200' 
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
+                        ? 'bg-blue-100 border-2 border-gray-400' 
+                        : 'hover:bg-gray-200'}`}>
                     <div className="relative">
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                         <User className="w-5 h-5 text-white" />
@@ -269,10 +265,6 @@ const ChatWithEmployees = () => {
                       <h3 className="text-sm font-medium text-gray-900 truncate">
                         {emp.name}
                       </h3>
-                      <p className="text-xs text-green-600 flex items-center">
-                        <Circle className="w-2 h-2 mr-1 fill-current" />
-                        Online
-                      </p>
                     </div>
                   </div>
                 ))}
@@ -292,10 +284,10 @@ const ChatWithEmployees = () => {
           {selectedEmployee ? (
             <>
               {/* Chat Header */}
-              <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
+              <div className="bg-white border-b border-gray-400 px-6 py-4 flex items-center justify-between shadow-sm">
                 <div className="flex items-center space-x-4">
                   <button className="lg:hidden p-2 hover:bg-gray-100 rounded-full">
-                    <ArrowLeft className="w-5 h-5 text-gray-600" />
+                    <ArrowLeft className="w-5 h-5 text-gray-700" />
                   </button>
                   <div className="flex items-center space-x-3">
                     <div className="relative">
@@ -315,7 +307,7 @@ const ChatWithEmployees = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <Phone className="w-5 h-5 text-gray-600" />
                   </button>
@@ -325,7 +317,7 @@ const ChatWithEmployees = () => {
                   <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <MoreVertical className="w-5 h-5 text-gray-600" />
                   </button>
-                </div>
+                </div> */}
               </div>
 
               {/* Messages Area */}
@@ -409,7 +401,7 @@ const ChatWithEmployees = () => {
                         }
                       }}
                       placeholder="Type a message..."
-                      className="w-full resize-none rounded-2xl border border-gray-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-h-32 min-h-[44px]"
+                      className="w-full resize-none rounded-2xl border border-gray-500 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-h-32 min-h-[44px]"
                       rows="1"
                       style={{ 
                         height: 'auto',
@@ -430,7 +422,7 @@ const ChatWithEmployees = () => {
                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                   >
-                    <Send className="w-5 h-5" />
+                    <Send className="w-6 h-6" />
                   </button>
                 </div>
               </div>
