@@ -15,7 +15,6 @@ const router = express.Router();
 router.use(protect);
 router.use(authorizeRoles('EMPLOYEE'));
 
-
 router.get('/tasks', getAssignedTasks);                          // Get all tasks assigned to logged-in employee
 router.get('/tasks/:id', getTaskById);                           // Get specific task details
 router.post('/report', upload.single('file'), submitReport);     // Submit a daily report with optional file
