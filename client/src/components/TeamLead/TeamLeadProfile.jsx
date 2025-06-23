@@ -25,7 +25,7 @@ export default function TeamLeadProfile() {
   const fetchEmployeeCount = async () => {
     try {
       const res = await apiService.get("/teamLead/employees");
-      setEmployeeCount(res.data.length);
+      setEmployeeCount(res.data.employees.length);
     } catch (err) {
       console.error("Failed to load employees", err);
       toast.error("Failed to load employees");
@@ -141,7 +141,7 @@ export default function TeamLeadProfile() {
                       Role
                     </p>
                     <p className="text-xl font-bold text-indigo-700">
-                      {profile.role}
+                      {profile.role ==="TEAM_LEAD" ? "Team Lead" : "Unknown Role"}
                     </p>
                   </div>
                 </div>
