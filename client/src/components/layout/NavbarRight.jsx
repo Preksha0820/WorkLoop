@@ -47,47 +47,81 @@ export default function NavbarRight() {
         icon: User,
         label: "My Profile",
         action: () => {
-          navigate("/profile");
+          let path = "/profile";
+          if (user?.role === "EMPLOYEE") {
+            path = "/employeeDashboard/my-profile";
+          } else if (user?.role === "TEAM_LEAD") {
+            path = "/teamLeadDashboard/my-profile";
+          } else if (user?.role === "ADMIN") {
+            path = "/adminDashboard/my-profile";
+          }
+          navigate(path);
           setIsProfileOpen(false);
         },
         description: "View and edit your profile",
       },
     ];
+
     if (user?.role === "ADMIN") {
       return [
         ...baseItems,
-        { icon: Users, label: "All Employees", action: () => navigate("/adminDashboard"), description: "Manage all employees" },
-        { icon: Settings, label: "System Settings", action: () => navigate("/admin/settings"), description: "Configure system settings" },
+        {
+          icon: Users,
+          label: "All Employees",
+          action: () => navigate("/adminDashboard"),
+          description: "Manage all employees",
+        },
+        {
+          icon: Settings,
+          label: "System Settings",
+          action: () => navigate("/admin/settings"),
+          description: "Configure system settings",
+        },
       ];
     } else if (user?.role === "TEAM_LEAD") {
       return [
         ...baseItems,
-        { icon: CheckSquare, label: "My Employees", action: () => navigate("/teamLeadDashboard"), description: "View your assigned tasks" },
-        { icon: Settings, label: "Settings", action: () => navigate("/team-Lead/settings"), description: "Personal settings" },
+        {
+          icon: Settings,
+          label: "Settings",
+          action: () => navigate("/teamLeadDashboard/settings"),
+          description: "Personal settings",
+        },
       ];
     } else {
       return [
         ...baseItems,
-        { icon: CheckSquare, label: "My Tasks", action: () => navigate("/employeeDashboard"), description: "View your assigned tasks" },
-        { icon: Settings, label: "Settings", action: () => navigate("/employee/settings"), description: "Personal settings" },
+        {
+          icon: CheckSquare,
+          label: "My Tasks",
+          action: () => navigate("/employeeDashboard"),
+          description: "View your assigned tasks",
+        },
+        {
+          icon: Settings,
+          label: "Settings",
+          action: () => navigate("/employeeDashboard/settings"),
+          description: "Personal settings",
+        },
       ];
     }
   };
 
+
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 ">
       {user && (
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative " ref={dropdownRef}>
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-3 px-3 py-2 bg-white border border-gray-200 rounded-full hover:shadow-md hover:border-gray-300 transition-all duration-200 group" >
+            className="flex items-center gap-3 px-3 py-2 bg-white border-2 border-purple-500 rounded-full hover:shadow-md hover:border-blue-400 hover:border-b-2 transition-all duration-100 group" >
             <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md ">
                 {user.name
                   ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
                   : user.email?.[0]?.toUpperCase() || 'U'}
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
             </div>
             <div className="hidden sm:flex flex-col items-start">
               <span className="text-gray-900 font-medium text-sm leading-tight">

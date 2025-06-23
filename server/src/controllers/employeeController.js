@@ -3,8 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import { notifyTeamLeadOnReportSubmission } from '../sockets/notifications.js';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
+import bcrypt from 'bcryptjs';
 
 // Get Assigned Tasks
 export const getAssignedTasks = async (req, res) => {
@@ -48,7 +48,6 @@ export const submitReport = async (req, res) => {
       return res.status(400).json({ message: 'Report content is required' });
     }
 
-
     let fileURL = null;
     if (req.file) {
       fileURL = `/uploads/${req.file.filename}`;
@@ -63,11 +62,6 @@ export const submitReport = async (req, res) => {
     });
 
     const user = await prisma.user.findUnique({where: { id: userId } });
-
-    if (user?.teamLeadId) {
-      notifyTeamLeadOnReportSubmission(user.teamLeadId, report);
-      console.log(`Notifying teamLead_${user.teamLeadId}`);
-    }
 
     res.status(201).json({ message: 'Report submitted successfully', report });
   } catch (err) {
@@ -270,6 +264,114 @@ export const updateTaskStatus = async (req, res) => {
     console.error('Error updating task status:', err);
     res.status(500).json({ message: 'Failed to update task status' });
   }
+};
+
+//get employee profile
+export const getEmployeeProfile = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        company: true,
+        teamLead: true
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      companyName: user.company?.name || "N/A",
+      teamLeadName: user.teamLead?.name || "N/A"
+    });
+  } catch (err) {
+    console.error('Error fetching profile:', err);
+    res.status(500).json({ message: 'Failed to fetch profile' });
+  }
+};
+
+//update api for name and email
+export const updateEmployeeProfile = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: "Name and email are required" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { name, email },
+    });
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
+    });
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).json({ message: 'New passwords do not match' });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: 'Current password is incorrect' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { password: hashedPassword },
+  });
+
+  res.json({ message: 'Password changed successfully' });
+};
+
+//theme preference
+export const updateThemePreference = async (req, res) => {
+  const { theme } = req.body;
+
+  if (!['light', 'dark'].includes(theme)) {
+    return res.status(400).json({ message: 'Invalid theme selected' });
+  }
+
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { themePreference: theme },
+  });
+
+  res.json({ message: 'Theme preference updated', theme });
 };
 
 export const getTeamLead = async (req, res) => {

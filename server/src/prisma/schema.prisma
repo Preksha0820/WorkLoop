@@ -11,29 +11,35 @@ model Company {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   domain    String?
-  users     User[]
   createdAt DateTime @default(now())
+  users     User[]
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  name         String
-  email        String    @unique
-  phone        String?
-  password     String
-  role         Role
-  teamLeadId   Int?
-  teamLead     User?     @relation("TeamLead", fields: [teamLeadId], references: [id])
-  teamMembers  User[]    @relation("TeamLead")
-  adminId      Int?
-  admin        User?     @relation("AdminLead", fields: [adminId], references: [id])
-  leads        User[]    @relation("AdminLead")
-  companyId    Int
-  company      Company   @relation(fields: [companyId], references: [id])
-  reports      Report[]
-  assignedTasks Task[]   @relation("AssignedTo")
-  givenTasks    Task[]   @relation("AssignedBy")
-  createdAt    DateTime  @default(now())
+  id                                       Int           @id @default(autoincrement())
+  name                                     String
+  email                                    String        @unique
+  password                                 String
+  role                                     Role
+  teamLeadId                               Int?
+  createdAt                                DateTime      @default(now())
+  companyId                                Int
+  adminId                                  Int?
+  phone                                    String?
+  ChatMessage_ChatMessage_receiverIdToUser ChatMessage[] @relation("ChatMessage_receiverIdToUser")
+  ChatMessage_ChatMessage_senderIdToUser   ChatMessage[] @relation("ChatMessage_senderIdToUser")
+  reports                                  Report[]
+  givenTasks                               Task[]        @relation("AssignedBy")
+  assignedTasks                            Task[]        @relation("AssignedTo")
+  admin                                    User?         @relation("AdminLead", fields: [adminId], references: [id])
+  leads                                    User[]        @relation("AdminLead")
+  company                                  Company       @relation(fields: [companyId], references: [id])
+  teamLead                                 User?         @relation("TeamLead", fields: [teamLeadId], references: [id])
+  teamMembers                              User[]        @relation("TeamLead")
+
+  @@index([adminId], map: "User_adminId_fkey")
+  @@index([companyId], map: "User_companyId_fkey")
+  @@index([teamLeadId], map: "User_teamLeadId_fkey")
 
   SentMessages     ChatMessage[] @relation("SentMessages")
   ReceivedMessages ChatMessage[] @relation("ReceivedMessages")
@@ -41,15 +47,16 @@ model User {
 
 model Report {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
   userId     Int
   reportDate DateTime @default(now())
   content    String
   fileURL    String?
   comment    String?
   createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, reportDate])
+  @@index([userId], map: "Report_userId_fkey")
 }
 
 model Task {
