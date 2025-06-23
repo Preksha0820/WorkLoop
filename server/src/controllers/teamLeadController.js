@@ -1,8 +1,6 @@
 import prisma from '../prisma.js';
 import { Role } from '@prisma/client';
-
-import { notifyEmployeeOnReportReview } from "../sockets/notifications.js";
-
+import bcrypt from 'bcryptjs';
 
 //Get all employees for team lead
 const getAllEmployees = async (req, res) => {
@@ -23,7 +21,7 @@ const getAllEmployees = async (req, res) => {
       }
     });
 
-    res.status(200).json(employees);
+    res.status(200).json({employees});
   } catch (err) {
     console.error('Error fetching employees:', err);
     res.status(500).json({ message: 'Error fetching employees' });
@@ -69,7 +67,7 @@ const assignTaskToEmployee = async (req, res) => {
         assignedById: teamLeadId
       }
     });
-
+    
     res.status(201).json({ message: "Task assigned successfully", task });
   } catch (err) {
     console.error("Error assigning task:", err);
@@ -97,52 +95,37 @@ const getAllAssignedTasks = async (req, res) => {
         createdAt: 'desc',
       },
     });
-
-    res.status(200).json(tasks);
+    res.status(200).json({tasks});
   } catch (err) {
     console.error("Error fetching tasks:", err);
     res.status(500).json({ message: "Failed to fetch assigned tasks" });
   }
 };
 
-//report review
-const updateReportStatus = async (req, res) => {
+//get all team reports
+const getAllTeamReports = async (req, res) => {
   try {
-    const { reportId } = req.params;
-    const { status } = req.body;
-    const teamLeadId = parseInt(req.user.id);
+    const teamLeadId = req.user.id;
 
-    if (!["APPROVED", "REJECTED"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
-    }
-
-    const report = await prisma.report.findUnique({
-      where: { id: parseInt(reportId) },
+    // Find all reports by employees assigned to this team lead
+    const reports = await prisma.report.findMany({
+      where: {
+        user: {
+          teamLeadId: teamLeadId
+        }
+      },
       include: {
-        user: true,
+        user: true,    // include employee details
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
-    if (
-      !report ||
-      report.user.teamLeadId !== teamLeadId ||
-      report.user.companyId !== req.user.companyId 
-    ) {
-      return res.status(403).json({ message: "Not authorized to update this report" });
-    }
-
-    const updatedReport = await prisma.report.update({
-      where: { id: report.id },
-      data: {
-        status,
-      },
-    });
-    notifyEmployeeOnReportReview(report.userId, updatedReport);
-
-    res.status(200).json({ message: "Report status updated", report: updatedReport });
+    res.status(200).json({ reports });
   } catch (err) {
-    console.error("Error updating report status:", err);
-    res.status(500).json({ message: "Failed to update report" });
+    console.error("Error fetching team reports:", err);
+    res.status(500).json({ message: "Failed to fetch team reports" });
   }
 };
 
@@ -186,11 +169,109 @@ const deleteEmployeeById = async (req, res) => {
   }
 };
 
+// Get logged-in team lead profile
+const getProfile = async (req, res) => {
+  try {
+    const teamLead = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true
+      }
+    });
+    if (!teamLead) {
+      return res.status(404).json({ message: "Team Lead not found" });
+    }
+    res.json(teamLead);
+  } catch (err) {
+    console.error("Error fetching profile:", err);
+    res.status(500).json({ message: "Failed to load profile" });
+  }
+};
+
+// Update profile
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const updated = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { name, email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true
+      }
+    });
+    res.json(updated);
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};
+
+//forget password
+const changePassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).json({ message: 'New passwords do not match' });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: 'Current password is incorrect' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { password: hashedPassword },
+  });
+
+  res.json({ message: 'Password changed successfully' });
+};
+
+//theme preference
+export const updateThemePreference = async (req, res) => {
+  const { theme } = req.body;
+
+  if (!['light', 'dark'].includes(theme)) {
+    return res.status(400).json({ message: 'Invalid theme selected' });
+  }
+
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { themePreference: theme },
+  });
+
+  res.json({ message: 'Theme preference updated', theme });
+};
+
+
 export {
     getAllEmployees,
     assignTaskToEmployee,
-    updateReportStatus,
     deleteEmployeeById,
     getAllAssignedTasks,
+    getAllTeamReports,
+    getProfile,
+    updateProfile,
+    changePassword,
 }
   

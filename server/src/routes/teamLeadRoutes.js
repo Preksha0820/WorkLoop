@@ -1,8 +1,11 @@
 import express from 'express';
 import { protect , authorizeRoles} from '../middlewares/authMiddleware.js';
 import { getAllEmployees ,assignTaskToEmployee,
-    updateReportStatus,
     getAllAssignedTasks,deleteEmployeeById,
+    getAllTeamReports,getProfile,
+    updateProfile,
+    changePassword,
+    updateThemePreference
 }  from '../controllers/teamLeadController.js';
 
 const router = express.Router();
@@ -10,7 +13,12 @@ const router = express.Router();
 router.route('/employees').get(protect ,authorizeRoles('TEAM_LEAD'), getAllEmployees);
 router.route('/task-assign/:assignedToId').post(protect, authorizeRoles('TEAM_LEAD'), assignTaskToEmployee);
 router.route("/assigned-tasks").get(protect, authorizeRoles('TEAM_LEAD'), getAllAssignedTasks);
-router.route('/report-status/:reportId').put(protect, authorizeRoles('TEAM_LEAD'), updateReportStatus);
-router.route('/delete-employee/:id').delete(protect, authorizeRoles('TEAM_LEAD'), deleteEmployeeById);
+router.route('/delete-employee/:id').delete(protect, authorizeRoles('TEAM_LEAD','ADMIN'), deleteEmployeeById);
+router.route('/team-reports').get(protect, authorizeRoles('TEAM_LEAD'), getAllTeamReports);
+router.get('/profile', protect, authorizeRoles('TEAM_LEAD'), getProfile);
+router.put('/profile', protect, authorizeRoles('TEAM_LEAD'), updateProfile);
+router.put('/change-password', protect, changePassword);
+router.put('/theme', protect, updateThemePreference);
+
 
 export default router;

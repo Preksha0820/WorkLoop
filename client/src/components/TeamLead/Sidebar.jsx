@@ -1,64 +1,73 @@
-import { NavLink } from "react-router-dom";
-import React from "react";
+import { Navigate, NavLink } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-export const Sidebar = () => {
+
+
+export default function Sidebar() {
   const baseClass = "block px-4 py-2 rounded-lg font-semibold transition duration-200";
   const activeClass = "bg-white text-purple-900";
   const inactiveClass = "text-white hover:bg-white hover:text-purple-900";
   const navigate = useNavigate();
   return (
     <aside className="w-64 bg-gradient-to-b from-blue-400 to-blue-700 p-4 shadow-lg flex flex-col">
-      {/* Logo */}
       <div className="mb-6 flex justify-center">
-        <img src="/logos/logo2.png" alt="Logo"  className="h-20 w-auto cursor-pointer hover:opacity-80 transition-opacity" onClick={() => navigate("/")} />
+        <img src="/logos/logo2.png" alt="Logo"  className="h-20 w-auto cursor-pointer hover:opacity-100 transition-opacity" onClick={() => navigate("/")} />
       </div>
+
       <div className="w-full h-0.5 bg-white mb-6"></div>
 
-      {/* Navigation */}
       <nav className="flex flex-col gap-3">
-      <NavLink
-          to="/employeeDashboard"
+        <NavLink
+          to="/teamLeadDashboard/quick-stats"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
           }
         >
           Quick Stats
         </NavLink>
-      <NavLink
-          to="/employeeDashboard/my-tasks"
-          className={({ isActive }) =>
-            `${baseClass} ${isActive ? activeClass : inactiveClass}`
-          }
-        >
-          My Tasks
-        </NavLink>
+
         <NavLink
-          to="/employeeDashboard/my-reports"
+          to="/teamLeadDashboard/manage-tasks"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
           }
         >
-          My Reports
+          Manage Tasks
         </NavLink>
 
         <NavLink
-          to="/employeeDashboard/submit-report"
+          to="/teamLeadDashboard/assign-task"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
           }
         >
-          Submit Report
+          Assign Task
         </NavLink>
+
         <NavLink
-          to="/employeeDashboard/chat"
+          to="/teamLeadDashboard/team-reports"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
           }
         >
-          Chat With Team Lead
+          Team Reports
+        </NavLink>
+
+        <NavLink
+          to="/teamLeadDashboard/manage-employees"
+          className={({ isActive }) =>
+            `${baseClass} ${isActive ? activeClass : inactiveClass}`
+          }
+        >
+          Manage Employees
+        </NavLink>
+        <NavLink to="/teamLeadDashboard/chat" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
+          Chat With Employees
+        </NavLink>
+        <NavLink to="/teamLeadDashboard/notifications" className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass}`}>
+          Notifications
         </NavLink>
       </nav>
     </aside>
   );
-};
+}

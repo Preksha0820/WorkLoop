@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 import { useNavigate } from "react-router-dom";
+import { IoEyeOutline , IoEyeOffOutline} from "react-icons/io5";
+
 
 export default function AuthForm({ isSignup }) {
   const { login, signup } = useAuth();
   const navigate = useNavigate(); 
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -65,7 +68,22 @@ export default function AuthForm({ isSignup }) {
       )}
 
       <input type="email" name="email"  placeholder="Email"  className="w-full p-2 border rounded" onChange={handleChange} />
-      <input type="password" name="password"  placeholder="Password"  className="w-full p-2 border rounded" onChange={handleChange} />
+      <div className="relative">
+  <input
+    type={showPassword ? "text" : "password"}
+    name="password"
+    placeholder="Password"
+    className="w-full p-2 border rounded pr-10"
+    onChange={handleChange}
+  />
+  <button
+    type="button"
+    onClick={() => setShowPassword((prev) => !prev)}
+    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+  >
+    {showPassword ? <IoEyeOutline size={20} /> : <IoEyeOffOutline size={20} />}
+  </button>
+</div>
       <button className="w-full bg-blue-900 text-white py-2 rounded">
         {isSignup ? "Signup" : "Login"}
       </button>

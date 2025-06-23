@@ -3,18 +3,33 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
+import bcrypt from 'bcryptjs';
 
 // Get Assigned Tasks
 export const getAssignedTasks = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
+    
+    const user = await prisma.user.findUnique({where:{id: userId}});
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (!user.companyId) {
+      return res.status(400).json({ message: 'Missing company ID in user' });
+    }
+    
 
     const tasks = await prisma.task.findMany({
       where: {
         assignedToId: userId,
-        assignedTo: { companyId: req.user.companyId }
+        assignedTo: {
+          companyId: user.companyId,
+        }
       },
-      orderBy: { deadline: 'asc' },
+      orderBy: {
+        deadline: 'asc',
+      },
     });
 
     res.status(200).json({ tasks });
@@ -24,50 +39,29 @@ export const getAssignedTasks = async (req, res) => {
   }
 };
 
-// Submit Daily Work Report
 export const submitReport = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
-    const { content, taskId } = req.body;
+    const { content } = req.body;
 
-    // Validate required fields
-    if (!content || !taskId) {
-      return res.status(400).json({ message: 'Content and taskId are required' });
+    if (!content) {
+      return res.status(400).json({ message: 'Report content is required' });
     }
 
-    // Optional: Check if the task exists and is assigned to this user
-    const task = await prisma.task.findFirst({
-      where: {
-        id: parseInt(taskId),
-        assignedToId: userId,
-      },
-    });
-
-    if (!task) {
-      return res.status(403).json({ message: "Invalid task ID or task not assigned to you" });
-    }
-
-    // Handle file upload (if any)
     let fileURL = null;
     if (req.file) {
       fileURL = `/uploads/${req.file.filename}`;
     }
 
-    // Create report
     const report = await prisma.report.create({
       data: {
         userId,
-        taskId: parseInt(taskId),
         content,
         fileURL,
       },
     });
-    // Find user's team lead id to notify
-    const user = await prisma.user.findUnique({ where: { id: userId } });
 
-    if (user?.teamLeadId) {
-      notifyTeamLeadOnReportSubmission(user.teamLeadId, report);
-    }
+    const user = await prisma.user.findUnique({where: { id: userId } });
 
     res.status(201).json({ message: 'Report submitted successfully', report });
   } catch (err) {
@@ -83,9 +77,6 @@ export const getAllReports = async (req, res) => {
 
     const reports = await prisma.report.findMany({
       where: { userId },
-      // include: {
-      //   task: true,
-      // },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -190,6 +181,232 @@ const storage = multer.diskStorage({
     cb(null, uniqueName);
   },
 });
+
+export const reportStats = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    const now = new Date();
+
+    const todayStart = startOfDay(now);
+    const todayEnd = endOfDay(now);
+
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 }); 
+    const weekEnd = endOfWeek(now, { weekStartsOn: 1 });     
+
+    const [todayReports, weekReports] = await Promise.all([
+      prisma.report.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      prisma.report.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: weekStart,
+            lte: weekEnd,
+          },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      todayCount: todayReports.length,
+      weekCount: weekReports.length,
+      todayReports,
+      weekReports,
+    });
+  } catch (err) {
+    console.error("Error fetching report stats:", err);
+    res.status(500).json({ message: "Failed to fetch report stats" });
+  }
+};
+
+export const updateTaskStatus = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    const taskId = req.params.taskId;
+    const { status } = req.body;
+
+    if (!taskId || !status) {
+      return res.status(400).json({ message: 'Task ID and status are required' });
+    }
+
+    const task = await prisma.task.findFirst({
+      where: {
+        id: parseInt(taskId),
+        assignedToId: userId,
+      },
+    });
+
+    if (!task) {
+      return res.status(403).json({ message: 'Task not found or not assigned to you' });
+    }
+
+    if (status !== 'COMPLETED' && status !== 'IN_PROGRESS' && status !== 'PENDING'){
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    const updatedTask = await prisma.task.update({
+      where: { id: task.id },
+      data: {
+        status,
+        completedAt: status === 'COMPLETED' ? new Date() : null,
+      },
+    });
+
+    res.status(200).json({ message: 'Task status updated successfully', task: updatedTask });
+  } catch (err) {
+    console.error('Error updating task status:', err);
+    res.status(500).json({ message: 'Failed to update task status' });
+  }
+};
+
+//get employee profile
+export const getEmployeeProfile = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        company: true,
+        teamLead: true
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      companyName: user.company?.name || "N/A",
+      teamLeadName: user.teamLead?.name || "N/A"
+    });
+  } catch (err) {
+    console.error('Error fetching profile:', err);
+    res.status(500).json({ message: 'Failed to fetch profile' });
+  }
+};
+
+//update api for name and email
+export const updateEmployeeProfile = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: "Name and email are required" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { name, email },
+    });
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
+    });
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).json({ message: 'New passwords do not match' });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: 'Current password is incorrect' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { password: hashedPassword },
+  });
+
+  res.json({ message: 'Password changed successfully' });
+};
+
+//theme preference
+export const updateThemePreference = async (req, res) => {
+  const { theme } = req.body;
+
+  if (!['light', 'dark'].includes(theme)) {
+    return res.status(400).json({ message: 'Invalid theme selected' });
+  }
+
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { themePreference: theme },
+  });
+
+  res.json({ message: 'Theme preference updated', theme });
+};
+
+export const getTeamLead = async (req, res) => {
+  try {
+    const userId = parseInt(req.user?.id);
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is missing or invalid." });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        teamLead: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!user || !user.teamLead) {
+      return res.status(404).json({ error: "Team lead not found." });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching team lead:", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+
 
 export const upload = multer({ storage });
 
