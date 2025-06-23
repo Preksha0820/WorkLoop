@@ -1,4 +1,5 @@
-// src/components/HowItWorks.jsx
+
+import { NavLink } from "react-router-dom";
 
 export default function Demo() {
   return (
@@ -15,9 +16,9 @@ export default function Demo() {
           <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors duration-200 shadow-lg">
             Start Free Trial
           </button>
-          <button className="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200">
+          <NavLink to="/auth" className="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200">
             Schedule Demo
-          </button>
+          </NavLink>
         </div>
         
         <p className="text-blue-200 text-sm mt-4">
