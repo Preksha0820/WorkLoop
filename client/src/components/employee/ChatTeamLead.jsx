@@ -16,6 +16,7 @@ const ChatTeamLead = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Fetch team lead info
   const fetchTeamLead = async () => {
@@ -136,6 +137,19 @@ const ChatTeamLead = () => {
     }
   }, [messages]);
 
+  const handleDeleteChatHistory = async () => {
+    if (!teamLead?.id) return;
+    if (!window.confirm('Are you sure you want to delete the chat history? This cannot be undone.')) return;
+    try {
+      await apiService.delete(`/chat/${teamLead.id}`);
+      setMessages([]);
+      setMenuOpen(false);
+      alert('Chat history deleted successfully.');
+    } catch (err) {
+      alert('Failed to delete chat history.');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto mt-6 mb-6 bg-white rounded-lg shadow-lg">
@@ -154,41 +168,56 @@ const ChatTeamLead = () => {
     <div className="max-w-6xl mx-auto mt-6 mb-6 bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="flex flex-col h-[600px]">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center space-x-4">
-          <button className="lg:hidden p-2 hover:bg-gray-100 rounded-full">
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
+        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm relative">
+          <div className="flex items-center space-x-4">
+            <button className="lg:hidden p-2 hover:bg-gray-100 rounded-full">
+              <ArrowLeft className="w-5 h-5 text-gray-600" />
+            </button>
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+              <div>
+                <h1 className="text-lg font-semibold text-gray-900">
+                  {teamLead?.name || 'Team Lead'}
+                </h1>
+                <p className="text-sm text-green-600 flex items-center">
+                  <Circle className="w-2 h-2 mr-1 fill-current" />
+                  Online
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900">
-                {teamLead?.name || 'Team Lead'}
-              </h1>
-              <p className="text-sm text-green-600 flex items-center">
-                <Circle className="w-2 h-2 mr-1 fill-current" />
-                Online
-              </p>
+          </div>
+          <div className="flex items-center space-x-2 relative">
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <Phone className="w-5 h-5 text-gray-600" />
+            </button>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <Video className="w-5 h-5 text-gray-600" />
+            </button>
+            <div className="relative">
+              <button
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                onClick={() => setMenuOpen((v) => !v)}
+              >
+                <MoreVertical className="w-5 h-5 text-gray-600" />
+              </button>
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
+                  <button
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 transition-colors"
+                    onClick={handleDeleteChatHistory}
+                  >
+                    Delete Chat History
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Phone className="w-5 h-5 text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Video className="w-5 h-5 text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <MoreVertical className="w-5 h-5 text-gray-600" />
-          </button>
-        </div>
-      </div>
 
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50">

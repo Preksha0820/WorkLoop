@@ -80,7 +80,6 @@ export default function App() {
               <Route path="manage-employees" element={<ManageEmployees />} />
               <Route path="team-reports" element={<TeamReports />} />
               <Route path="assign-task" element={<AssignTaskPage />} />
-              <Route path="notifications" element={<TLNotifications />} />
               <Route path="chat" element={<ChatWithEmployees/>}/>
               <Route path="/teamLeadDashboard/my-profile"element={<TeamLeadProfile />}/>
               <Route path="/teamLeadDashboard/settings" element={<TLSettings />} />
