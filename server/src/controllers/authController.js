@@ -1,7 +1,8 @@
 import prisma from '../prisma.js';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../utils/auth.js';
-import { Role } from '@prisma/client';
+import pkg from '@prisma/client';
+const { PrismaClient, Role } = pkg;
 
 
 export const signup = async (req, res) => {
