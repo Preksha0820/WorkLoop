@@ -1,6 +1,7 @@
 import prisma from '../prisma.js';
-import { Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import pkg from '@prisma/client';
+const { PrismaClient, Role } = pkg;
 
 //Get all employees for team lead
 const getAllEmployees = async (req, res) => {
