@@ -51,20 +51,21 @@ export default function Settings() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
+    <div className="max-w-xl mx-auto p-6 px-6 bg-blue-50">
       <h1 className="text-2xl font-semibold mb-6">Account Settings</h1>
 
       {/* Change Password Section */}
-      <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-sm mb-6">
+      <div className="bg-white border border-gray-500 rounded-lg p-6 shadow-xl mb-6">
         <h2 className="text-lg font-medium mb-4">Change Password</h2>
-        <div className="space-y-4">
+            <div className="w-full border-t-2 border-gray-400"></div>
+        <div className="space-y-4 mt-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Current Password
             </label>
             <input
               type="password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-400 rounded-md px-3 py-2 "
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
             />
@@ -76,7 +77,7 @@ export default function Settings() {
             </label>
             <input
               type="password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-400 rounded-md px-3 py-2 "
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
@@ -88,8 +89,7 @@ export default function Settings() {
             </label>
             <input
               type="password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
-              value={confirmNewPassword}
+className="w-full border border-gray-400 rounded-md px-3 py-2 "              value={confirmNewPassword}
               onChange={(e) => setConfirmNewPassword(e.target.value)}
             />
           </div>
@@ -97,7 +97,7 @@ export default function Settings() {
           <button
             onClick={handlePasswordChange}
             disabled={loading}
-            className="bg-blue-600 text-white rounded-md px-4 py-2 font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="bg-indigo-600 text-white rounded-md px-4 py-2 font-medium hover:bg-indigo-600 disabled:opacity-50"
           >
             {loading ? "Updating..." : "Update Password"}
           </button>
@@ -105,13 +105,14 @@ export default function Settings() {
       </div>
 
       {/* Theme Preference Section */}
-      <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-sm">
+      <div className="bg-white border border-gray-400 rounded-lg p-6 shadow-xl">
         <h2 className="text-lg font-medium mb-4">Theme Preference</h2>
-        <div className="space-y-4">
+        <div className="w-full border-t-2 border-gray-400"></div>
+        <div className="space-y-4 mt-8">
           <select
             value={theme}
             onChange={(e) => setTheme(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border border-gray-400 rounded-md px-3 py-2"
           >
             <option value="light">Light</option>
             <option value="dark">Dark</option>
@@ -121,7 +122,7 @@ export default function Settings() {
           <button
             onClick={handleThemeChange}
             disabled={loading}
-            className="bg-blue-600 text-white rounded-md px-4 py-2 font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="bg-indigo-700 text-white rounded-md px-4 py-2 font-medium hover:bg-indigo-600 disabled:opacity-50"
           >
             {loading ? "Saving..." : "Save Theme"}
           </button>
