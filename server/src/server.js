@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN ,
+  origin: "https://work-loop-pink.vercel.app",
   credentials: true,
 }));
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
