@@ -6,7 +6,7 @@ let io;
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "https://work-loop-pink.vercel.app" ,
+      origin: process.env.CORS_ORIGIN, // Adjust the origin as needed
       methods: ["GET", "POST"],
       credentials: true,
     },
