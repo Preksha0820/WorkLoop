@@ -193,7 +193,70 @@ const getEachEmployeeByTeam = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch employees by team' });
   }
 };
-   
+
+export const getAdminProfile = async (req, res) => {
+  try {
+    const admin = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      include: {
+        company: true,
+        leads: true,
+        reports: true,
+      },
+    });
+
+    if (!admin) return res.status(404).json({ message: "Admin not found" });
+
+    // Count total team leads
+    const totalTeamLeads = admin.leads.length;
+
+    // Fetch employees under all leads (indirect team members)
+    const teamLeadIds = admin.leads.map((lead) => lead.id);
+
+    const totalEmployees = await prisma.user.count({
+      where: {
+        teamLeadId: { in: teamLeadIds },
+        role: 'EMPLOYEE',
+      },
+    });
+
+    res.json({
+      name: admin.name,
+      email: admin.email,
+      phone: admin.phone,
+      role: admin.role,
+      createdAt: admin.createdAt,
+      companyName: admin.company?.name || "",
+      companyDomain: admin.company?.domain || "",
+      totalTeamLeads: admin.leads.length,
+      totalEmployees,
+      reportCount: admin.reports.length,
+    });
+  } catch (error) {
+    console.error("Admin profile error:", error);
+    res.status(500).json({ message: "Failed to load profile", error: error.message });
+  }
+};
+
+export const updateAdminProfile = async (req, res) => {
+  try {
+    const { name, email, phone } = req.body;
+
+    const updatedAdmin = await prisma.user.update({
+      where: { id: req.user.id },
+      data: {
+        name,
+        email,
+        phone,
+      },
+    });
+
+    res.json({ message: "Profile updated successfully", updatedAdmin });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update profile", error: error.message });
+  }
+};
+
 
 export{
     getAllEmployeesInCompany,
