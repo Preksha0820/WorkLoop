@@ -196,26 +196,30 @@ const getEachEmployeeByTeam = async (req, res) => {
 
 export const getAdminProfile = async (req, res) => {
   try {
+    const { id, companyId } = req.user;
+
+    // Fetch basic admin info with company
     const admin = await prisma.user.findUnique({
-      where: { id: req.user.id },
+      where: { id },
       include: {
         company: true,
-        leads: true,
-        reports: true,
       },
     });
 
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
-    // Count total team leads
-    const totalTeamLeads = admin.leads.length;
+    // Accurate team lead count (reuses same logic as getTeamLeads)
+    const totalTeamLeads = await prisma.user.count({
+      where: {
+        companyId,
+        role: 'TEAM_LEAD',
+      },
+    });
 
-    // Fetch employees under all leads (indirect team members)
-    const teamLeadIds = admin.leads.map((lead) => lead.id);
-
+    // Accurate employee count (same logic as getAllEmployeesInCompany)
     const totalEmployees = await prisma.user.count({
       where: {
-        teamLeadId: { in: teamLeadIds },
+        companyId,
         role: 'EMPLOYEE',
       },
     });
@@ -228,10 +232,10 @@ export const getAdminProfile = async (req, res) => {
       createdAt: admin.createdAt,
       companyName: admin.company?.name || "",
       companyDomain: admin.company?.domain || "",
-      totalTeamLeads: admin.leads.length,
+      totalTeamLeads,
       totalEmployees,
-      reportCount: admin.reports.length,
     });
+
   } catch (error) {
     console.error("Admin profile error:", error);
     res.status(500).json({ message: "Failed to load profile", error: error.message });
