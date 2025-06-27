@@ -4,7 +4,7 @@ import apiService from '../../api/apiService';
 import { useAuth } from '../../context/AuthContext';
 import { Send, User, Clock, MoreVertical, Phone, Video, ArrowLeft, Circle, Users } from 'lucide-react';
 
-const socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5004", {
+const socket = io(import.meta.env.VITE_SOCKET_URL, {
   withCredentials: true,
 });
 

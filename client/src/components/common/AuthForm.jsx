@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 import { useNavigate } from "react-router-dom";
 import { IoEyeOutline , IoEyeOffOutline} from "react-icons/io5";
+import { toast } from "react-toastify";
 
 
 export default function AuthForm({ isSignup }) {
@@ -29,11 +30,16 @@ export default function AuthForm({ isSignup }) {
     try {
       if (isSignup) {
         const res = await signup(formData);
-        console.log(res);
+        toast.success("Signup successful!");
+        navigate("/login");
       } else {
-        console.log("Logging in with:", formData.email, formData.password);
-        await login(formData.email, formData.password);
-      }
+        if (!formData.email || !formData.password) {
+          toast.error("Email and password are required");
+          return;
+        }
+        const res = await login(formData.email, formData.password);
+        toast.success("Login successful!");
+    }
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong");
     }

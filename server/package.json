@@ -2,11 +2,12 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon -r dotenv/config src/server.js"
+    "dev": "nodemon -r dotenv/config src/server.js",
+    "postinstall": "prisma generate --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
-    "@supabase/supabase-js": "^2.50.0",
+    "@supabase/supabase-js": "^2.50.1",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",

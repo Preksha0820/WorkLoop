@@ -33,6 +33,7 @@ import TLSettings from "./components/TeamLead/Settings";
 import MyEmployees from "./components/Admin/MyEmployees";
 import TeamGroups from "./components/Admin/TeamGroups";
 import TeamLeadProfile from "./components/TeamLead/TeamLeadProfile";
+import AdminProfile from "./components/Admin/AdminProfile";
 
 
 export default function App() {
@@ -87,7 +88,7 @@ export default function App() {
             </Route>
 
             <Route path="/adminDashboard" element={<AdminDashboard />}>
-              {/* <Route path="/adminDashboard/my-profile" element={<AdminProfile />}/> */}
+              <Route path="my-profile" element={<AdminProfile />}/>
               <Route path="team-groups" element={<TeamGroups />} />
               <Route index element={<MyEmployees />} />
             </Route>

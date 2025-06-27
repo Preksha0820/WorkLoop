@@ -16,33 +16,38 @@ model Company {
 }
 
 model User {
-  id                                       Int           @id @default(autoincrement())
-  name                                     String
-  email                                    String        @unique
-  password                                 String
-  role                                     Role
-  teamLeadId                               Int?
-  createdAt                                DateTime      @default(now())
-  companyId                                Int
-  adminId                                  Int?
-  phone                                    String?
-  ChatMessage_ChatMessage_receiverIdToUser ChatMessage[] @relation("ChatMessage_receiverIdToUser")
-  ChatMessage_ChatMessage_senderIdToUser   ChatMessage[] @relation("ChatMessage_senderIdToUser")
-  reports                                  Report[]
-  givenTasks                               Task[]        @relation("AssignedBy")
-  assignedTasks                            Task[]        @relation("AssignedTo")
-  admin                                    User?         @relation("AdminLead", fields: [adminId], references: [id])
-  leads                                    User[]        @relation("AdminLead")
-  company                                  Company       @relation(fields: [companyId], references: [id])
-  teamLead                                 User?         @relation("TeamLead", fields: [teamLeadId], references: [id])
-  teamMembers                              User[]        @relation("TeamLead")
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  role       Role
+  teamLeadId Int?
+  createdAt  DateTime @default(now())
+  companyId  Int
+  adminId    Int?
+  phone      String?
+
+  // Reports & Tasks
+  reports       Report[]
+  givenTasks    Task[]   @relation("AssignedBy")
+  assignedTasks Task[]   @relation("AssignedTo")
+
+  // Chat Relations
+  sentMessages     ChatMessage[] @relation("SentMessages")
+  receivedMessages ChatMessage[] @relation("ReceivedMessages")
+
+  // Hierarchical Relations
+  admin       User?  @relation("AdminLead", fields: [adminId], references: [id])
+  leads       User[] @relation("AdminLead")
+  teamLead    User?  @relation("TeamLead", fields: [teamLeadId], references: [id])
+  teamMembers User[] @relation("TeamLead")
+
+  // Organization
+  company Company @relation(fields: [companyId], references: [id])
 
   @@index([adminId], map: "User_adminId_fkey")
   @@index([companyId], map: "User_companyId_fkey")
   @@index([teamLeadId], map: "User_teamLeadId_fkey")
-
-  SentMessages     ChatMessage[] @relation("SentMessages")
-  ReceivedMessages ChatMessage[] @relation("ReceivedMessages")
 }
 
 model Report {
@@ -60,17 +65,18 @@ model Report {
 }
 
 model Task {
-  id            Int        @id @default(autoincrement())
-  title         String
-  description   String
-  assignedTo    User       @relation("AssignedTo", fields: [assignedToId], references: [id])
-  assignedToId  Int
-  assignedBy    User       @relation("AssignedBy", fields: [assignedById], references: [id])
-  assignedById  Int
-  deadline      DateTime
-  status        TaskStatus @default(IN_PROGRESS)
-  completedAt   DateTime?
-  createdAt     DateTime   @default(now())
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String
+  assignedToId Int
+  assignedById Int
+  deadline     DateTime
+  status       TaskStatus @default(IN_PROGRESS)
+  completedAt  DateTime?
+  createdAt    DateTime   @default(now())
+
+  assignedTo User @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedBy User @relation("AssignedBy", fields: [assignedById], references: [id])
 }
 
 model ChatMessage {
@@ -80,8 +86,8 @@ model ChatMessage {
   content    String
   createdAt  DateTime @default(now())
 
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender   User @relation("SentMessages", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }
 
 enum Role {

@@ -72,12 +72,12 @@ export default function NavbarRight() {
           action: () => navigate("/adminDashboard"),
           description: "Manage all employees",
         },
-        {
-          icon: Settings,
-          label: "System Settings",
-          action: () => navigate("/admin/settings"),
-          description: "Configure system settings",
-        },
+        // {
+        //   icon: Settings,
+        //   label: "System Settings",
+        //   action: () => navigate("/admin/settings"),
+        //   description: "Configure system settings",
+        // },
       ];
     } else if (user?.role === "TEAM_LEAD") {
       return [

@@ -24,6 +24,9 @@
     const signup = async (formData) => {
       try {
         const res = await apiService.post("/auth/signup", formData);
+        const { user, token } = res.data;
+        localStorage.setItem("authToken", token);
+        setUser(user);
         return res.data;
       } catch (err) {
         console.error("Signup failed:", err.response?.data || err.message);
@@ -42,7 +45,7 @@
         setUser(res.data);
       } catch (err) {
         if (err.response?.status === 401) {
-          logout(); // only log out if token is invalid/unauthorized
+          logout(); 
         } else {
           console.error("Profile fetch error:", err);
         } 

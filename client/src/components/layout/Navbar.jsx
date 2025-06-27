@@ -56,7 +56,7 @@ export default function Navbar() {
         <li><HashLink smooth to="/#features" className="hover:text-blue-700 transition-colors">Features</HashLink></li>
         <li><HashLink smooth to="/#companies" className="hover:text-blue-700 transition-colors">Clients</HashLink></li>
         <li><HashLink smooth to="/#book-demo" className="hover:text-blue-700 transition-colors">Want To Try?</HashLink></li>
-        <li><a href="#blog" className="hover:text-blue-700 transition-colors">Blog</a></li>
+        <li><HashLink smooth to="/#blog" className="hover:text-blue-700 transition-colors">Blog</HashLink></li>
       </ul>
 
       {!user && location.pathname !== "/auth" ? (
