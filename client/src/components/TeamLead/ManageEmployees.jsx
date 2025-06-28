@@ -8,7 +8,6 @@ export default function ManageEmployees() {
   const fetchEmployees = async () => {
     try {
       const res = await apiService.get("/teamlead/employees");
-      console.log("Fetched employees:", res.data.employees);
       setEmployees(res.data.employees);
     } catch (err) {
       console.error("Failed to fetch employees", err);

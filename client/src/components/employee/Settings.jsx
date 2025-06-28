@@ -103,31 +103,6 @@ className="w-full border border-gray-400 rounded-md px-3 py-2 "              val
           </button>
         </div>
       </div>
-
-      {/* Theme Preference Section */}
-      <div className="bg-white border border-gray-400 rounded-lg p-6 shadow-xl">
-        <h2 className="text-lg font-medium mb-4">Theme Preference</h2>
-        <div className="w-full border-t-2 border-gray-400"></div>
-        <div className="space-y-4 mt-8">
-          <select
-            value={theme}
-            onChange={(e) => setTheme(e.target.value)}
-            className="w-full border border-gray-400 rounded-md px-3 py-2"
-          >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="auto">Auto (System)</option>
-          </select>
-
-          <button
-            onClick={handleThemeChange}
-            disabled={loading}
-            className="bg-indigo-700 text-white rounded-md px-4 py-2 font-medium hover:bg-indigo-600 disabled:opacity-50"
-          >
-            {loading ? "Saving..." : "Save Theme"}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

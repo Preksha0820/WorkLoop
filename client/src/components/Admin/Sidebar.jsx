@@ -9,7 +9,7 @@ export default function Sidebar() {
     <aside className="w-64 bg-gradient-to-b from-blue-400 to-blue-700 p-4 shadow-lg flex flex-col">
       {/* Logo */}
       <div className="mb-6 flex justify-center">
-        <img src="/logos/logo2.png" alt="Logo" className="h-20 w-auto" />
+        <img src="/logos/logo2.png" alt="Logo"  className="h-20 w-auto cursor-pointer hover:opacity-80 transition-opacity" onClick={() => navigate("/")} />
       </div>
       <div className="w-full h-0.5 bg-white mb-6"></div>
 

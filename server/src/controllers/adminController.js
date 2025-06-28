@@ -147,6 +147,7 @@ const changeEmployeeRole = async (req, res) => {
     res.status(500).json({ message: 'Failed to change employee role', error: error.message });
   }
 }
+
 const getEachEmployeeByTeam = async (req, res) => {
   try {
     const { companyId } = req.user;
