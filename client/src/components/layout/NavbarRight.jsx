@@ -72,12 +72,6 @@ export default function NavbarRight() {
           action: () => navigate("/adminDashboard"),
           description: "Manage all employees",
         },
-        // {
-        //   icon: Settings,
-        //   label: "System Settings",
-        //   action: () => navigate("/admin/settings"),
-        //   description: "Configure system settings",
-        // },
       ];
     } else if (user?.role === "TEAM_LEAD") {
       return [
@@ -121,7 +115,7 @@ export default function NavbarRight() {
         <div className="relative " ref={dropdownRef}>
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-3 px-3 py-2 bg-white border-2 border-purple-500 rounded-full hover:shadow-md hover:border-blue-400 hover:border-b-2 transition-all duration-100 group" >
+            className="flex items-center gap-3 px-3 py-2 bg-white border-[1px] border-indigo-400 rounded-full hover:shadow-md hover:border-blue-300 hover:border-b-2 transition-all duration-100 group" >
             <div className="relative">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md ">
                 {user.name

@@ -17,7 +17,7 @@
 
       } catch (err) {
         console.error("Login failed:", err.response?.data || err.message);
-        throw err; // rethrow to be caught in AuthForm
+        throw err; 
       }
     };
 

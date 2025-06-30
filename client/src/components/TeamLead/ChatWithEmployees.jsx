@@ -101,10 +101,6 @@ const ChatWithEmployees = () => {
   // Receive message in real-time
   useEffect(() => {
     socket.on('receive-message', (message) => {
-      // console.log('Received message:', message);
-      // console.log('Current user ID:', user.id);
-      // console.log('Message sender ID:', message.senderId);
-      // console.log('Message receiver ID:', message.receiverId);
       
       // Check if this message is for the current user (either as sender or receiver)
       if (message.senderId === user.id || message.receiverId === user.id) {
