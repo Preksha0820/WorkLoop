@@ -148,10 +148,10 @@ const EmployeeManagementDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Employee Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Employee Management</h1>
               <p className="text-gray-600">Manage your team members and organizational structure</p>
             </div>
             <div className="flex items-center space-x-4">
@@ -225,7 +225,7 @@ const EmployeeManagementDashboard = () => {
                       <div key={employee.id} className="bg-gradient-to-r from-white to-gray-50 rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
-                            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                               {employee.name.charAt(0)}
                             </div>
                             <div>

@@ -1,9 +1,11 @@
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
   const baseClass = "block px-4 py-2 rounded-lg font-semibold transition duration-200";
   const activeClass = "bg-white text-purple-900";
   const inactiveClass = "text-white hover:bg-white hover:text-purple-900";
+  const navigate = useNavigate();
 
   return (
     <aside className="w-64 bg-gradient-to-b from-blue-400 to-blue-700 p-4 shadow-lg flex flex-col">

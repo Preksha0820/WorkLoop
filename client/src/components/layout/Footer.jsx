@@ -1,6 +1,8 @@
 // src/components/Footer.jsx
+import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className="bg-[#10101a] text-white px-6 md:px-20 py-4 mt-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
