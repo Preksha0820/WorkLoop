@@ -230,7 +230,6 @@ export const getAdminProfile = async (req, res) => {
       companyDomain: admin.company?.domain || "",
       totalTeamLeads: admin.leads.length,
       totalEmployees,
-      reportCount: admin.reports.length,
     });
   } catch (error) {
     console.error("Admin profile error:", error);
