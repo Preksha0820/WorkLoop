@@ -2,8 +2,7 @@
 import { useState } from "react";
 import apiService from "../../api/apiService";
 import { toast } from "react-toastify";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import TiptapEditor from "../TipTapEditor";
 
 export default function SubmitReport() {
     const [workSummary, setWorkSummary] = useState("");
@@ -162,22 +161,9 @@ export default function SubmitReport() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Work Summary *
                     </label>
-                    <ReactQuill
-                      theme="snow"
+                    <TiptapEditor
                       value={workSummary}
                       onChange={setWorkSummary}
-                      placeholder="Describe the work completed, challenges faced, achievements, etc..."
-                      modules={{
-                        toolbar: [
-                          [{ header: [1, 2, 3, false] }],
-                          ["bold", "italic", "underline", "strike"],
-                          [{ color: [] }, { background: [] }],
-                          [{ list: "ordered" }, { list: "bullet" }],
-                          ["table"], // Needs extra plugin for full support
-                          ["clean"],
-                        ],
-                      }}
-                      className="bg-white border border-gray-300 rounded-lg"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       {workSummary.length} characters
