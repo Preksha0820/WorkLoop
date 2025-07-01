@@ -88,6 +88,7 @@ export const submitReport = async (req, res) => {
     res.status(500).json({ message: 'Failed to submit report' });
   }
 };
+
 //get all submitted reports by employees
 export const getAllReports = async (req, res) => {
   try {
@@ -188,7 +189,6 @@ export const getTaskById = async (req, res) => {
 };
 
 // Multer Config
-
 
 export const reportStats = async (req, res) => {
   try {
@@ -366,22 +366,6 @@ export const changePassword = async (req, res) => {
   res.json({ message: 'Password changed successfully' });
 };
 
-//theme preference
-export const updateThemePreference = async (req, res) => {
-  const { theme } = req.body;
-
-  if (!['light', 'dark'].includes(theme)) {
-    return res.status(400).json({ message: 'Invalid theme selected' });
-  }
-
-  await prisma.user.update({
-    where: { id: req.user.id },
-    data: { themePreference: theme },
-  });
-
-  res.json({ message: 'Theme preference updated', theme });
-};
-
 export const getTeamLead = async (req, res) => {
   try {
     const userId = parseInt(req.user?.id);
@@ -414,5 +398,4 @@ export const getTeamLead = async (req, res) => {
   }
 };
 
-
-
+export const updateThemePreference = async (req, res) => {};

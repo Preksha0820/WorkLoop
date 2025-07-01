@@ -5,21 +5,31 @@ export default function TinyMCEEditor({ value, onChange, placeholder = "Write yo
   return (
     <div className="border border-gray-500 rounded-lg bg-white shadow-sm">
       <Editor
-        apiKey={'xogeefeualo6yhgnl8ny0sfaufl6z3trgrbjmc0zzjc2nwv1'}
+        apiKey={"xogeefeualo6yhgnl8ny0sfaufl6z3trgrbjmc0zzjc2nwv1"}
         value={value}
         onEditorChange={onChange}
         init={{
           height: 300,
           menubar: false,
           plugins: [
-            'lists table advlist autolink link charmap anchor',
-            'searchreplace visualblocks code fullscreen'
+            "lists",
+            "table",
+            "advlist",
+            "autolink",
+            "link",
+            "charmap",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
           ],
           toolbar:
-            'undo redo | bold italic underline | bullist numlist | table | forecolor | removeformat',
+            "undo redo | bold italic underline | bullist numlist | table tableprops | forecolor removeformat",
           placeholder,
+          contextmenu: 'table',
           content_style:
-            'body { font-family:Inter,Arial,sans-serif; font-size:16px; } table { border-collapse: collapse; width: 100%; } td, th { border: 1px solid #ccc; padding: 8px; }',
+            "body { font-family:Inter,Arial,sans-serif; font-size:16px; } table { border-collapse: collapse; width: 100%; } td, th { border: 1px solid #ccc; padding: 8px; }",
           table_toolbar:
             'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
           branding: false,
