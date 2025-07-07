@@ -1,4 +1,4 @@
-**WorkLoop** – Task & Team Management System
+# WorkLoop – Task & Team Management System
 
 **WorkLoop** is a full-stack platform that helps organizations manage employees, assign tasks, track daily reports, and communicate in real time. It supports role-based access and is built with modern technologies to streamline team collaboration and performance tracking.
 
