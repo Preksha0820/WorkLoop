@@ -27,7 +27,6 @@ router.get('/profile', getEmployeeProfile);
 router.put('/profile', updateEmployeeProfile);
 router.put('/change-password' , changePassword);
 router.put('/theme' , updateThemePreference);
-
 router.get("/team-lead", getTeamLead);                             // Get team lead details for the logged-in employee
 
 export default router;

@@ -47,7 +47,7 @@ export default function Navbar() {
   return (
     <nav className="flex items-center justify-between px-6 py-2 bg-white shadow-md fixed top-0 left-0 right-0 z-50">
       <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-        <img src="/logos/logo2.png" alt="Logo" className="h-14 w-auto" />
+        <img src="/logos/logo3.jpg" alt="Logo" className="h-10 w-auto" />
       </Link>
 
       <ul className={`hidden md:flex gap-6 text-blue-900 font-semibold ${
