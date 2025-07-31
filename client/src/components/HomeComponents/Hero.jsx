@@ -13,7 +13,7 @@ export default function Hero() {
           Track Tasks, Coordinate Teams, Monitor Performance and Report Back - All in One Place!
         </p>
         <p className="text-gray-600 text-md">
-          Experience the future of business automation with Task Tracker! A mobile-first solution powered by AI that digitizes and automates every business department, making team collaboration effortless and organized. With the support of 7 Indian languages, collaborate with teams seamlessly, no matter where they are. Task Tracker's user-friendly interface ensures that you can say goodbye to complexity and hello to a simpler, more efficient way of working together for business growth.
+          Experience the future of business automation with WorkLoop! A  solution that digitizes and automates every business department, making team collaboration effortless and organized. With this collaborate with teams seamlessly, no matter where they are. WorkLoop's user-friendly interface ensures that you can say goodbye to complexity and hello to a simpler, more efficient way of working together for business growth.
         </p>
       </div>
       <div className="md:w-1/2 mt-8 md:mt-0">
