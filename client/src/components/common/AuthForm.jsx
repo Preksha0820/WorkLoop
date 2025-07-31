@@ -90,7 +90,7 @@ export default function AuthForm({ isSignup }) {
     {showPassword ? <IoEyeOutline size={20} /> : <IoEyeOffOutline size={20} />}
   </button>
 </div>
-      <button className="w-full bg-blue-900 text-white py-2 rounded">
+      <button className="w-full bg-blue-900 hover:bg-blue-700 text-white py-2 rounded">
         {isSignup ? "Signup" : "Login"}
       </button>
     </form>

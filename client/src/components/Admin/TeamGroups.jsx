@@ -124,9 +124,7 @@ const TeamGroup = () => {
                   className={`p-2 rounded-md transition-all duration-200 ${
                     viewMode === 'card' 
                       ? 'bg-white shadow-sm text-indigo-600' 
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
+                      : 'text-gray-500 hover:text-gray-700'}`}>
                   <Grid3X3 className="w-4 h-4" />
                 </button>
                 <button
@@ -135,8 +133,7 @@ const TeamGroup = () => {
                     viewMode === 'compact' 
                       ? 'bg-white shadow-sm text-indigo-600' 
                       : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
+                  }`}>
                   <List className="w-4 h-4" />
                 </button>
               </div>

@@ -76,7 +76,6 @@ const deleteTeamLeadsById= async(req, res) => {
     
 };
 
-
 const switchEmployeeTeam = async (req, res) => {
   const { employeeId } = req.params;
   const { newTeamLeadId } = req.body;
@@ -147,6 +146,7 @@ const changeEmployeeRole = async (req, res) => {
     res.status(500).json({ message: 'Failed to change employee role', error: error.message });
   }
 }
+
 const getEachEmployeeByTeam = async (req, res) => {
   try {
     const { companyId } = req.user;
@@ -194,7 +194,7 @@ const getEachEmployeeByTeam = async (req, res) => {
   }
 };
 
-export const getAdminProfile = async (req, res) => {
+const getAdminProfile = async (req, res) => {
   try {
     const { id, companyId } = req.user;
 
@@ -242,7 +242,7 @@ export const getAdminProfile = async (req, res) => {
   }
 };
 
-export const updateAdminProfile = async (req, res) => {
+const updateAdminProfile = async (req, res) => {
   try {
     const { name, email, phone } = req.body;
 
@@ -268,5 +268,7 @@ export{
     deleteTeamLeadsById,
     switchEmployeeTeam,
     changeEmployeeRole,
-    getEachEmployeeByTeam
-}
+    getEachEmployeeByTeam,
+    getAdminProfile,
+    updateAdminProfile
+  }

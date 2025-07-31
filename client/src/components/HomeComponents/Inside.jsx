@@ -24,11 +24,6 @@ export default function Inside() {
           <p className="text-gray-600 mb-6">
             Stay updated with the latest trends in task management, employee reporting, and workflow automation. Read our blog to learn best practices.
           </p>
-           <button
-            onClick={handleReadMore}
-            className="bg-pink-600 text-white px-6 py-2 rounded-full hover:bg-pink-700 transition">
-            Read More
-          </button>
         </div>
       </div>
     </section>
