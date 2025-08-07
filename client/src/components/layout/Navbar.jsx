@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import {
   User, Settings, LogOut, CheckSquare, Shield, Users,
   BarChart3, ChevronDown, UserCheck, ClipboardList,
-  Activity, Crown, FileText
+  Activity, Crown, FileText, Menu, X
 } from "lucide-react";
 import { HashLink } from "react-router-hash-link";
 import NavbarRight from "./NavbarRight";
@@ -14,6 +14,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -44,10 +45,14 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return (
-    <nav className="flex items-center justify-between px-6 py-2 bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-        <img src="/logos/logo3.jpg" alt="Logo" className="h-10 w-auto" />
+    return (
+    <nav className="flex items-center justify-between px-6 py-3 bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+      <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center space-x-2">
+        <img 
+          src="/logos/logo3.jpg" 
+          alt="Logo" 
+          className="h-10 w-10 object-cover rounded-md" 
+        />
       </Link>
 
       <ul className={`hidden md:flex gap-6 text-blue-900 font-semibold ${
@@ -58,6 +63,14 @@ export default function Navbar() {
         <li><HashLink smooth to="/#book-demo" className="hover:text-blue-700 transition-colors">Want To Try?</HashLink></li>
         <li><HashLink smooth to="/#blog" className="hover:text-blue-700 transition-colors">Blog</HashLink></li>
       </ul>
+
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden p-2 text-blue-900 hover:text-blue-700"
+      >
+        {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      </button>
 
       {!user && location.pathname !== "/auth" ? (
         <div className="flex gap-2">
@@ -74,6 +87,19 @@ export default function Navbar() {
         </div>
       ) : (
         user && <NavbarRight />
+      )}
+
+      {/* Mobile menu dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+          <div className="px-6 py-4 space-y-4">
+            <Link to="/" className="block text-blue-900 hover:text-blue-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+            <HashLink smooth to="/#features" className="block text-blue-900 hover:text-blue-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Features</HashLink>
+            <HashLink smooth to="/#companies" className="block text-blue-900 hover:text-blue-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Clients</HashLink>
+            <HashLink smooth to="/#book-demo" className="block text-blue-900 hover:text-blue-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Want To Try?</HashLink>
+            <HashLink smooth to="/#blog" className="block text-blue-900 hover:text-blue-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Blog</HashLink>
+          </div>
+        </div>
       )}
     </nav>
   );
