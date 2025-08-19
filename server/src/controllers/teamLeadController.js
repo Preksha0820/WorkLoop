@@ -181,7 +181,13 @@ const getProfile = async (req, res) => {
         id: true,
         name: true,
         email: true,
-        role: true
+        role: true,
+        companyId: true,   
+        company: {         
+          select: {
+            name: true
+          }
+        }
       }
     });
     if (!teamLead) {

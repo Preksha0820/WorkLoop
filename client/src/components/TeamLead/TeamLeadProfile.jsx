@@ -148,6 +148,7 @@ export default function TeamLeadProfile() {
             </div>
           </div>
 
+{/* summary */}
           <div className="bg-white rounded-xl border border-gray-400 shadow-sm p-6">
             <h2 className="text-lg font-semibold text-center text-gray-800 bg-purple-200 py-4 px-2 mb-4 border-b rounded-xl">
               📌 Summary
@@ -177,7 +178,7 @@ export default function TeamLeadProfile() {
             </div>
 
             {/* Row 2: Role, Team Size */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Role</p>
                 <p className="font-medium text-gray-800">
@@ -190,6 +191,7 @@ export default function TeamLeadProfile() {
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
