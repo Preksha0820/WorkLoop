@@ -152,14 +152,15 @@ export default function TeamLeadProfile() {
             <h2 className="text-lg font-semibold text-center text-gray-800 bg-purple-200 py-4 px-2 mb-4 border-b rounded-xl">
               📌 Summary
             </h2>
-            <div className="w-full border-t-2 border-gray-400"></div>
+            <div className="w-full border-t-2 border-gray-400 mb-4"></div>
 
-            <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
-              <p className="text-gray-500 mb-1">ID</p>
-              <p className="font-medium text-gray-800">{profile.id}</p>
-            </div>
+            {/* Row with 3 items */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+              <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+                <p className="text-gray-500 mb-1">ID</p>
+                <p className="font-medium text-gray-800">{profile.id}</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm mt-5">
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Role</p>
                 <p className="font-medium text-gray-800">

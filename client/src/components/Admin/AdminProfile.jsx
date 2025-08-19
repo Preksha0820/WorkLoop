@@ -53,68 +53,125 @@ export default function AdminProfile() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">🛠️ Admin Profile</h1>
-          <p className="text-gray-500 mt-1 text-sm">View and manage your profile and company overview.</p>
+          <p className="text-gray-500 mt-1 text-sm">
+            View and manage your profile and company overview.
+          </p>
         </div>
 
         <div className="space-y-8">
           <div className="bg-white border border-gray-300 rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-center text-gray-800 bg-yellow-200 py-4 mb-4 border-b rounded-xl">🧍 Basic Information</h2>
+            <h2 className="text-lg font-semibold text-center text-gray-800 bg-yellow-200 py-4 mb-4 border-b rounded-xl">
+              🧍 Basic Information
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-medium text-gray-700">Full Name</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
                 {isEditing ? (
-                  <input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full mt-1 p-2 border rounded-md" />
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="w-full mt-1 p-2 border rounded-md"
+                  />
                 ) : (
-                  <p className="mt-1 p-2 bg-gray-50 border rounded-md">{profile.name}</p>
+                  <p className="mt-1 p-2 bg-gray-50 border rounded-md">
+                    {profile.name}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">Email</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Email
+                </label>
                 {isEditing ? (
-                  <input type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="w-full mt-1 p-2 border rounded-md" />
+                  <input
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    className="w-full mt-1 p-2 border rounded-md"
+                  />
                 ) : (
-                  <p className="mt-1 p-2 bg-gray-50 border rounded-md">{profile.email}</p>
+                  <p className="mt-1 p-2 bg-gray-50 border rounded-md">
+                    {profile.email}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">Phone</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Phone
+                </label>
                 {isEditing ? (
-                  <input type="text" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} className="w-full mt-1 p-2 border rounded-md" />
+                  <input
+                    type="text"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    className="w-full mt-1 p-2 border rounded-md"
+                  />
                 ) : (
-                  <p className="mt-1 p-2 bg-gray-50 border rounded-md">{profile.phone || "-"}</p>
+                  <p className="mt-1 p-2 bg-gray-50 border rounded-md">
+                    {profile.phone || "-"}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">Account Created</label>
-                <p className="mt-1 p-2 bg-gray-50 border rounded-md">{new Date(profile.createdAt).toLocaleDateString()}</p>
+                <label className="text-sm font-medium text-gray-700">
+                  Account Created
+                </label>
+                <p className="mt-1 p-2 bg-gray-50 border rounded-md">
+                  {new Date(profile.createdAt).toLocaleDateString()}
+                </p>
               </div>
             </div>
 
             <div className="flex justify-end mt-6">
               {isEditing ? (
                 <div className="space-x-4">
-                  <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-red-500 text-white rounded-md">Cancel</button>
-                  <button onClick={saveProfile} disabled={isSaving} className="px-4 py-2 bg-green-600 text-white rounded-md">{isSaving ? "Saving..." : "Save"}</button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-4 py-2 bg-red-500 text-white rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={saveProfile}
+                    disabled={isSaving}
+                    className="px-4 py-2 bg-green-600 text-white rounded-md"
+                  >
+                    {isSaving ? "Saving..." : "Save"}
+                  </button>
                 </div>
               ) : (
-                <button onClick={() => setIsEditing(true)} className="px-4 py-2 bg-indigo-600 text-white rounded-md">Edit Profile</button>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md"
+                >
+                  Edit Profile
+                </button>
               )}
             </div>
           </div>
 
           <div className="bg-white border border-gray-300 rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-center text-gray-800 bg-yellow-200 py-4 mb-4 border-b rounded-xl">🏢 Company Information</h2>
+            <h2 className="text-lg font-semibold text-center text-gray-800 bg-yellow-200 py-4 mb-4 border-b rounded-xl">
+              🏢 Company Information
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-medium text-gray-700">Company Name</label>
-                <p className="mt-1 p-2 bg-gray-50 border rounded-md">{profile.companyName}</p>
+                <label className="text-sm font-medium text-gray-700">
+                  Company Name
+                </label>
+                <p className="mt-1 p-2 bg-gray-50 border rounded-md">
+                  {profile.companyName}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Company Domain</label>
-                <p className="mt-1 p-2 bg-gray-50 border rounded-md">{profile.companyDomain || "-"}</p>
+                <label className="text-sm font-medium text-gray-700">Company ID</label>
+                <p className="mt-1 p-2 bg-gray-50 border rounded-md">{profile.companyId}</p>
               </div>
             </div>
           </div>
@@ -122,11 +179,15 @@ export default function AdminProfile() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-20 ">
             <div className="bg-purple-200 p-4 rounded-lg text-center border mt-10">
               <p className="text-gray-600">👥 Total Team Leads</p>
-              <p className="text-2xl font-bold text-purple-700">{profile.totalTeamLeads || 0}</p>
+              <p className="text-2xl font-bold text-purple-700">
+                {profile.totalTeamLeads || 0}
+              </p>
             </div>
             <div className="bg-purple-200 p-4 rounded-lg text-center border mt-10">
               <p className="text-gray-600">👨‍👩‍👧‍👦 Total Employees</p>
-              <p className="text-2xl font-bold text-purple-700">{profile.totalEmployees || 0}</p>
+              <p className="text-2xl font-bold text-purple-700">
+                {profile.totalEmployees || 0}
+              </p>
             </div>
           </div>
         </div>

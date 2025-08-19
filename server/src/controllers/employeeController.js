@@ -304,12 +304,16 @@ export const getEmployeeProfile = async (req, res) => {
     }
 
     res.status(200).json({
+      id: user.id,                        // 👈 employee/user id
       name: user.name,
       email: user.email,
       role: user.role,
+      companyId: user.company?.id || null, // 👈 company id
       companyName: user.company?.name || "N/A",
+      teamLeadId: user.teamLead?.id || null, // optional
       teamLeadName: user.teamLead?.name || "N/A"
     });
+    
   } catch (err) {
     console.error('Error fetching profile:', err);
     res.status(500).json({ message: 'Failed to fetch profile' });
