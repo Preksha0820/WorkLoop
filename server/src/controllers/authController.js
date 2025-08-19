@@ -21,11 +21,9 @@ export const signup = async (req, res) => {
 
     if (inputRole === 'ADMIN') {
       if (!companyName) return res.status(400).json({ message: 'Company name is required for admin' });
-
       company = await prisma.company.create({ data: { name: companyName } });
     } else {
       if (!companyId) return res.status(400).json({ message: 'companyId is required' });
-
       company = await prisma.company.findUnique({ where: { id: parseInt(companyId) } });
       if (!company) return res.status(404).json({ message: 'Company not found' });
     }

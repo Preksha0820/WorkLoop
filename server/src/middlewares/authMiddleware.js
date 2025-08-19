@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
+//Makes sure only logged-in users can access that route.
 export const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -22,6 +22,7 @@ export const protect = (req, res, next) => {
   }
 };
 
+//Makes sure only users with the right role can access that route.
 export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
