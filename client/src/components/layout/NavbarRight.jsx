@@ -255,7 +255,7 @@ export default function NavbarRight() {
                     <p className="text-sm text-gray-600">{user.email}</p>
 
                     {user.id && (
-                      <p className="text-xs text-gray-500">ID: {user.id}</p>
+                      <p className="text-xs text-gray-500">Id: {user.id}</p>
                     )}
 
                     {user.role && roleInfo && (
