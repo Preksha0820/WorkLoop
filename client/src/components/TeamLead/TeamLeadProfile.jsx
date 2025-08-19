@@ -148,7 +148,7 @@ export default function TeamLeadProfile() {
             </div>
           </div>
 
-{/* summary */}
+          {/* summary */}
           <div className="bg-white rounded-xl border border-gray-400 shadow-sm p-6">
             <h2 className="text-lg font-semibold text-center text-gray-800 bg-purple-200 py-4 px-2 mb-4 border-b rounded-xl">
               📌 Summary
@@ -166,13 +166,13 @@ export default function TeamLeadProfile() {
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Company</p>
                 <p className="font-medium text-gray-800">
-                  {profile.companyName || "N/A"}
+                  {profile.company?.name || "N/A"} {/* ✅ Fixed */}
                 </p>
               </div>
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Company Id</p>
                 <p className="font-medium text-gray-800">
-                  {profile.companyId || "N/A"}
+                  {profile.companyId || "N/A"} {/* ✅ From backend */}
                 </p>
               </div>
             </div>
@@ -191,7 +191,6 @@ export default function TeamLeadProfile() {
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
