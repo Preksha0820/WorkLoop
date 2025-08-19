@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./server
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./server/.env
+    depends_on: []
+
+  frontend:
+    build: ./client
+    ports:
+      - "80:80"
+    env_file:
+      - ./client/.env

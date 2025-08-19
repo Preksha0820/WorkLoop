@@ -44,6 +44,12 @@ export const getAssignedTasks = async (req, res) => {
   }
 };
 
+// Helper function to strip HTML tags
+const stripHtmlTags = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+};
+
 export const submitReport = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
@@ -52,6 +58,9 @@ export const submitReport = async (req, res) => {
     if (!content) {
       return res.status(400).json({ message: 'Report content is required' });
     }
+
+    // Strip HTML tags from content
+    const cleanContent = stripHtmlTags(content);
 
     let fileURL = null;
     if (req.file) {
@@ -77,7 +86,7 @@ export const submitReport = async (req, res) => {
     const report = await prisma.report.create({
       data: {
         userId,
-        content,
+        content: cleanContent,
         fileURL,
       },
     });
@@ -125,9 +134,12 @@ export const editReport = async (req, res) => {
       return res.status(400).json({ message: 'Only PENDING reports can be edited' });
     }
 
+    // Strip HTML tags from content
+    const cleanContent = stripHtmlTags(content);
+
     const updated = await prisma.report.update({
       where: { id: reportId },
-      data: { content },
+      data: { content: cleanContent },
     });
 
     res.status(200).json({ message: 'Report updated successfully', updated });

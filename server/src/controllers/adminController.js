@@ -61,19 +61,68 @@ const getTeamLeads = async (req, res) => {
   }
 };
 
-const deleteTeamLeadsById= async(req, res) => { 
- 
-   const {id} = req.params;
+const deleteTeamLeadsById = async (req, res) => { 
+  const { id } = req.params;
+  const teamLeadId = parseInt(id);
+  
   try {
-    const deletedTeamLead = await prisma.user.delete({
-      where: { id: parseInt(id) }
+    // First, check if the team lead exists
+    const teamLead = await prisma.user.findUnique({
+      where: { id: teamLeadId },
+      select: { id: true, name: true, role: true }
     });
-    return res.status(200).json({ message: 'Team lead deleted successfully', deletedTeamLead });     
+
+    if (!teamLead) {
+      return res.status(404).json({ message: 'Team lead not found' });
+    }
+
+    if (teamLead.role !== 'TEAM_LEAD') {
+      return res.status(400).json({ message: 'User is not a team lead' });
+    }
+
+    // Delete all related records in the correct order using a transaction
+    await prisma.$transaction(async (tx) => {
+      // 1. Delete chat messages where team lead is sender or receiver
+      await tx.chatMessage.deleteMany({
+        where: {
+          OR: [
+            { senderId: teamLeadId },
+            { receiverId: teamLeadId }
+          ]
+        }
+      });
+
+      // 2. Delete tasks assigned by the team lead
+      await tx.task.deleteMany({
+        where: { assignedById: teamLeadId }
+      });
+
+
+
+      // 5. Update all employees under this team lead to remove teamLeadId
+      await tx.user.updateMany({
+        where: { teamLeadId: teamLeadId },
+        data: { teamLeadId: null }
+      });
+
+      // 6. Finally, delete the team lead
+      await tx.user.delete({
+        where: { id: teamLeadId }
+      });
+    });
+
+    return res.status(200).json({ 
+      message: 'Team lead deleted successfully',
+      deletedTeamLead: teamLead
+    });     
   }
   catch (error) {  
-    return res.status(500).json({ message: 'Failed to delete team lead', error: error.message }); 
+    console.error('Error deleting team lead:', error);
+    return res.status(500).json({ 
+      message: 'Failed to delete team lead', 
+      error: error.message 
+    }); 
   }
-    
 };
 
 const switchEmployeeTeam = async (req, res) => {

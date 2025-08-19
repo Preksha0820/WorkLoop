@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import {
   ChevronDown, LogOut, User, Settings, CheckSquare,
   Shield, Users, BarChart3, UserCheck, ClipboardList,
-  Activity, Crown, FileText
+  Activity, Crown, FileText, Move
 } from "lucide-react";
 import { act } from "react";
 
@@ -13,7 +13,12 @@ export default function NavbarRight() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [position, setPosition] = useState({ x: 20, y: 20 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  
   const dropdownRef = useRef(null);
+  const navbarRightRef = useRef(null);
 
   const handleLogout = () => {
     logout();
@@ -31,6 +36,50 @@ export default function NavbarRight() {
   };
 
   const roleInfo = user?.role ? getRoleInfo(user.role) : null;
+
+  // Drag functionality
+  const handleMouseDown = (e) => {
+    if (e.target.closest('button, a, input')) return; // Don't drag when clicking interactive elements
+    
+    setIsDragging(true);
+    const rect = navbarRightRef.current.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+
+    const newX = e.clientX - dragOffset.x;
+    const newY = e.clientY - dragOffset.y;
+
+    // Keep navbar within viewport bounds
+    const maxX = window.innerWidth - navbarRightRef.current.offsetWidth;
+    const maxY = window.innerHeight - navbarRightRef.current.offsetHeight;
+
+    setPosition({
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY))
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, dragOffset]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -110,9 +159,22 @@ export default function NavbarRight() {
 
 
   return (
-    <div className="flex gap-3 ">
-      {user && (
-        <div className="relative " ref={dropdownRef}>
+    <div 
+      ref={navbarRightRef}
+      className={`fixed z-50 cursor-move select-none ${
+        isDragging ? 'shadow-2xl' : 'shadow-lg'
+      }`}
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        minWidth: '200px'
+      }}
+      onMouseDown={handleMouseDown}
+    >
+        
+      
+            {user && (
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="flex items-center gap-3 px-3 py-2 bg-white border-[1px] border-indigo-400 rounded-full hover:shadow-md hover:border-blue-300 hover:border-b-2 transition-all duration-100 group" >
