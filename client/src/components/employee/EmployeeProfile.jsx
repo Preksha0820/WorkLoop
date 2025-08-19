@@ -148,34 +148,38 @@ export default function EmployeeProfile() {
             <div className="w-full border-t-2 border-gray-400 mb-4"></div>
 
             {/* Row 1: Employee ID + Reports To */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm mb-4">
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Employee ID</p>
                 <p className="font-medium text-gray-800">{profile.id}</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
-                <p className="text-gray-500 mb-1">Reports To</p>
-                <p className="font-medium text-gray-800">
-                  {profile.teamLeadName} ({profile.teamLeadId || "N/A"})
-                </p>
+                <p className="text-gray-500 mb-1">Company</p>
+                <p className="font-medium text-gray-800">{profile.companyName}</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+                <p className="text-gray-500 mb-1">Company Id</p>
+                <p className="font-medium text-gray-800">{profile.companyId || "N/A"}</p>
               </div>
             </div>
 
             {/* Row 2: Role + Company */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Role</p>
                 <p className="font-medium text-gray-800">{profile.role}</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
-                <p className="text-gray-500 mb-1">Company</p>
-                <p className="font-medium text-gray-800">
-                  {profile.companyName} ({profile.companyId || "N/A"})
-                </p>
+                <p className="text-gray-500 mb-1">Reports To</p>
+                <p className="font-medium text-gray-800">{profile.teamLeadName}</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+                <p className="text-gray-500 mb-1">TeamLead Id</p>
+                <p className="font-medium text-gray-800">{profile.teamLeadId || "N/A"}</p>
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>
