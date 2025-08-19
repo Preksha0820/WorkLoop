@@ -1,24 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext"; 
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
 import { IoEyeOutline , IoEyeOffOutline} from "react-icons/io5";
 import { toast } from "react-toastify";
 
 
-export default function AuthForm({ isSignup }) {
+export default function AuthForm({ isSignup, invitationData }) {
   const { login, signup } = useAuth();
   const navigate = useNavigate(); 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const email = searchParams.get('email');
   const [showPassword, setShowPassword] = useState(false);
-
+  
+  
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    email: email || "",
     password: "",
     role: "EMPLOYEE",
     companyName: "",
     companyId: "",
     teamLeadId: ""
   });
+
+  
+
+  // Update data when invitation data changes
+  useEffect(() => {
+   
+    if (invitationData) {
+     
+      setFormData(prev => {
+        const newData = {
+          ...prev,
+          email: email ||"",
+          companyId: String(invitationData.companyId || prev.companyId),
+          companyName: invitationData.companyName || prev.companyName,
+          teamLeadId: String(invitationData.teamLeadId || prev.teamLeadId),
+          role: "EMPLOYEE"
+        };
+        
+        return newData;
+      });
+    }
+  }, [invitationData, email]);
+
+  
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -44,9 +72,21 @@ export default function AuthForm({ isSignup }) {
       alert(err.response?.data?.message || "Something went wrong");
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {invitationData && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <div className="flex items-center">
+            <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+            <p className="text-blue-800 text-sm">
+              You're joining <strong>{invitationData.companyName}</strong> as an employee
+            </p>
+          </div>
+        </div>
+      )}
+      
       {isSignup && (
         <>
           <input
@@ -55,8 +95,15 @@ export default function AuthForm({ isSignup }) {
             placeholder="Name"
             className="w-full p-2 border rounded"
             onChange={handleChange}
+          
           />
-          <select name="role"  className="w-full p-2 border rounded"  onChange={handleChange} value={formData.role}>
+          <select 
+            name="role"  
+            className="w-full p-2 border rounded"  
+            onChange={handleChange} 
+            value={formData.role}
+            disabled={!!invitationData}
+          >
             <option value="EMPLOYEE">Employee</option>
             <option value="TEAM_LEAD">Team Lead</option>
             <option value="ADMIN">Admin</option>
@@ -65,15 +112,23 @@ export default function AuthForm({ isSignup }) {
             <input type="text" name="companyName" placeholder="Company Name"  className="w-full p-2 border rounded" onChange={handleChange}/>
           )}
           {formData.role !== "ADMIN" && (
-            <input type="text" name="companyId" placeholder="Company ID"  className="w-full p-2 border rounded" onChange={handleChange} />
+            <input type="text" name="companyId" placeholder="Company ID"  className="w-full p-2 border rounded" onChange={handleChange} value={formData.companyId} readOnly={!!invitationData} />
           )}
           {formData.role === "EMPLOYEE" && (
-            <input type="text" name="teamLeadId"  placeholder="Team Lead ID"  className="w-full p-2 border rounded"  onChange={handleChange} />
+            <input type="text" name="teamLeadId"  placeholder="Team Lead ID"  className="w-full p-2 border rounded"  onChange={handleChange} value={formData.teamLeadId}  readOnly={!!invitationData}/>
           )}
         </>
       )}
 
-      <input type="email" name="email"  placeholder="Email"  className="w-full p-2 border rounded" onChange={handleChange} />
+      <input type="email" 
+             name="email" 
+             placeholder="Email" 
+             className="w-full p-2 border rounded" 
+             onChange={handleChange} 
+             value={formData.email}
+             readOnly={!!email}
+             disabled={!!invitationData}
+             />
       <div className="relative">
   <input
     type={showPassword ? "text" : "password"}

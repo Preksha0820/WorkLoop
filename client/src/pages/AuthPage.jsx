@@ -6,8 +6,39 @@ import { CheckCircle, Users } from "lucide-react";
 
 export default function AuthPage() {
   const [isSignup, setIsSignup] = useState(false);
+  const [invitationData, setInvitationData] = useState(null);
+  const [isVerifyingInvitation, setIsVerifyingInvitation] = useState(false);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  // Check for invitation token in URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteToken = urlParams.get('invite');
+    
+    if (inviteToken && !invitationData) {
+      verifyInvitation(inviteToken);
+    }
+  }, []);
+
+  const verifyInvitation = async (token) => {
+    setIsVerifyingInvitation(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5004'}/auth/verify-invitation/${token}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setInvitationData(data);
+        setIsSignup(true); // Switch to signup mode
+      } else {
+        console.error('Invalid invitation:', data.message);
+      }
+    } catch (error) {
+      console.error('Error verifying invitation:', error);
+    } finally {
+      setIsVerifyingInvitation(false);
+    }
+  };
 
   useEffect(() => {
     if (!loading && user) {
@@ -35,12 +66,17 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="w-full max-w-md">
         {/* Mobile Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">WorkLoop</h1>
-          <p className="text-gray-600">Where productivity meets simplicity</p>
+          <div className="flex items-center justify-center mb-4">
+            
+            <div>
+              <h1 className="text-3xl font-bold text-blue-900">WorkLoop</h1>
+              <p className="text-blue-600 font-medium">Where productivity meets simplicity</p>
+            </div>
+          </div>
         </div>
 
         {/* Auth Toggle */}
@@ -80,7 +116,7 @@ export default function AuthPage() {
             </p>
           </div>
 
-          <AuthForm isSignup={isSignup} />
+          <AuthForm isSignup={isSignup} invitationData={invitationData} />
 
           {/* Switch Prompt */}
           <div className="mt-6 text-center">

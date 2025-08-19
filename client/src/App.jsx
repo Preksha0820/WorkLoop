@@ -56,7 +56,7 @@ export default function App() {
         </div>
       )}
 
-      <main className="flex-grow">
+      <main className={`flex-grow ${!isDashboardRoute ? 'pt-16' : ''}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<AuthPage />} />

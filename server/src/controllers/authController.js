@@ -1,5 +1,6 @@
 import prisma from '../prisma.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/auth.js';
 import pkg from '@prisma/client';
 const { PrismaClient, Role } = pkg;
@@ -98,6 +99,48 @@ export const getProfile = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Failed to fetch profile' });
   }
-}
+};
+
+// Verify invitation token
+export const verifyInvitation = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    if (!token) {
+      return res.status(400).json({ message: 'Invitation token is required' });
+    }
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    
+    // Check if token is expired
+    if (decoded.expiresAt && new Date(decoded.expiresAt) < new Date()) {
+      return res.status(400).json({ message: 'Invitation has expired' });
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: decoded.email }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this email already exists' });
+    }
+
+    // Return invitation data for frontend
+    res.status(200).json({
+      email: decoded.email,
+      companyId: decoded.companyId,
+      teamLeadId: decoded.teamLeadId,
+      companyName: decoded.companyName,
+      teamLeadName: decoded.teamLeadName
+    });
+
+  } catch (error) {
+    console.error('Error verifying invitation:', error);
+    res.status(400).json({ message: 'Invalid or expired invitation token' });
+  }
+};
 
 
