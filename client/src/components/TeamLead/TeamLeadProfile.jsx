@@ -148,20 +148,43 @@ export default function TeamLeadProfile() {
             </div>
           </div>
 
+          {/* summary */}
           <div className="bg-white rounded-xl border border-gray-400 shadow-sm p-6">
             <h2 className="text-lg font-semibold text-center text-gray-800 bg-purple-200 py-4 px-2 mb-4 border-b rounded-xl">
               📌 Summary
             </h2>
-            <div className="w-full border-t-2 border-gray-400"></div>
+            <div className="w-full border-t-2 border-gray-400 mb-4"></div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-5">
+            {/* Row 1: TeamLead Id, Company, Company Id */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm mb-4">
+              <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+                <p className="text-gray-500 mb-1">TeamLead Id</p>
+                <p className="font-medium text-gray-800">
+                  {profile.teamLeadId || "N/A"}
+                </p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+                <p className="text-gray-500 mb-1">Company</p>
+                <p className="font-medium text-gray-800">
+                  {profile.company?.name || "N/A"} {/* ✅ Fixed */}
+                </p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+                <p className="text-gray-500 mb-1">Company Id</p>
+                <p className="font-medium text-gray-800">
+                  {profile.companyId || "N/A"} {/* ✅ From backend */}
+                </p>
+              </div>
+            </div>
+
+            {/* Row 2: Role, Team Size */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Role</p>
                 <p className="font-medium text-gray-800">
-                  {profile.role === "TEAM_LEAD" ? "Team Lead" : "Unknown Role"}
+                  {profile.role === "TEAM_LEAD" ? "Team Lead" : profile.role}
                 </p>
               </div>
-
               <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
                 <p className="text-gray-500 mb-1">Team Size</p>
                 <p className="font-medium text-gray-800">{employeeCount}</p>

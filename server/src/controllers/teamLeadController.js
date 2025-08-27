@@ -181,8 +181,15 @@ const getProfile = async (req, res) => {
         id: true,
         name: true,
         email: true,
-        role: true
-      }
+        role: true,
+        teamLeadId: true,   // ✅ Include teamLeadId
+        companyId: true,    // ✅ Include companyId
+        company: {
+          select: {
+            name: true,     // ✅ Fetch company name
+          },
+        },
+      },
     });
     if (!teamLead) {
       return res.status(404).json({ message: "Team Lead not found" });
