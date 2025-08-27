@@ -1,13 +1,11 @@
 // src/components/layout/NavbarRight.jsx
-import { useState, useRef, useEffect, lazy } from "react";
+import { useState, useRef, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
   ChevronDown, LogOut, User, Settings, CheckSquare,
-  Shield, Users, BarChart3, UserCheck, ClipboardList,
-  Activity, Crown, FileText, Move
+  Shield, Users, BarChart3,Crown
 } from "lucide-react";
-import { act } from "react";
 
 export default function NavbarRight() {
   const { user, logout } = useAuth();

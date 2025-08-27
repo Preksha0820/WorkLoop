@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/auth.js';
 import pkg from '@prisma/client';
-const { PrismaClient, Role } = pkg;
+const { Role } = pkg;
 
 
 export const signup = async (req, res) => {

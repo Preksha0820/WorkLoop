@@ -320,15 +320,22 @@ export const getEmployeeProfile = async (req, res) => {
 export const updateEmployeeProfile = async (req, res) => {
   try {
     const userId = parseInt(req.user.id);
-    const { name, email } = req.body;
-
-    if (!name || !email) {
-      return res.status(400).json({ message: "Name and email are required" });
+    const { name, email , skills } = req.body;
+    const updated = {};
+    if(name){
+      updated.name = name;
     }
-
+    if(email){
+      updated.email = email;
+    }
+    if(skills){
+      updated.skills=skills;
+    }
+      
+  
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { name, email },
+      data: updated,
     });
 
     res.status(200).json({
@@ -336,6 +343,7 @@ export const updateEmployeeProfile = async (req, res) => {
       user: {
         name: updatedUser.name,
         email: updatedUser.email,
+        skills:updatedUser.skills
       },
     });
   } catch (err) {

@@ -16,35 +16,34 @@ model Company {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  role       Role
-  teamLeadId Int?
-  createdAt  DateTime @default(now())
-  companyId  Int
-  adminId    Int?
-  phone      String?
-
-  // Reports & Tasks
-  reports       Report[]
-  givenTasks    Task[]   @relation("AssignedBy")
-  assignedTasks Task[]   @relation("AssignedTo")
-
-  // Chat Relations
-  sentMessages     ChatMessage[] @relation("SentMessages")
+  id               Int           @id @default(autoincrement())
+  name             String
+  email            String        @unique
+  password         String
+  role             Role
+  teamLeadId       Int?
+  createdAt        DateTime      @default(now())
+  companyId        Int
+  adminId          Int?
+  phone            String?
   receivedMessages ChatMessage[] @relation("ReceivedMessages")
+  sentMessages     ChatMessage[] @relation("SentMessages")
+  reports          Report[]
+  givenTasks       Task[]        @relation("AssignedBy")
+  assignedTasks    Task[]        @relation("AssignedTo")
+  admin            User?         @relation("AdminLead", fields: [adminId], references: [id])
+  leads            User[]        @relation("AdminLead")
+  company          Company       @relation(fields: [companyId], references: [id])
+  teamLead         User?         @relation("TeamLead", fields: [teamLeadId], references: [id])
+  teamMembers      User[]        @relation("TeamLead")
+  
+   // AI Assignment Features
+  skills        Json?   // store as ["React", "Node.js"]
+  availability  Float?  // e.g. workload ratio or hours available
+  productivity  Float?  // e.g. average task efficiency
+  score         Float?  // ML-predicted score (used for top-N ranking)
 
-  // Hierarchical Relations
-  admin       User?  @relation("AdminLead", fields: [adminId], references: [id])
-  leads       User[] @relation("AdminLead")
-  teamLead    User?  @relation("TeamLead", fields: [teamLeadId], references: [id])
-  teamMembers User[] @relation("TeamLead")
-
-  // Organization
-  company Company @relation(fields: [companyId], references: [id])
-
+  
   @@index([adminId], map: "User_adminId_fkey")
   @@index([companyId], map: "User_companyId_fkey")
   @@index([teamLeadId], map: "User_teamLeadId_fkey")
@@ -72,11 +71,17 @@ model Task {
   assignedById Int
   deadline     DateTime
   status       TaskStatus @default(IN_PROGRESS)
-  completedAt  DateTime?
   createdAt    DateTime   @default(now())
+  completedAt  DateTime?
+  assignedBy   User       @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedTo   User       @relation("AssignedTo", fields: [assignedToId], references: [id])
+  
+  // AI Assignment Features
+  requiredSkills Json?   // e.g. ["Node.js", "SQL"]
+  difficulty     Int?    // scale like 1–5 or 1–10
 
-  assignedTo User @relation("AssignedTo", fields: [assignedToId], references: [id])
-  assignedBy User @relation("AssignedBy", fields: [assignedById], references: [id])
+  @@index([assignedById], map: "Task_assignedById_fkey")
+  @@index([assignedToId], map: "Task_assignedToId_fkey")
 }
 
 model ChatMessage {
@@ -85,9 +90,11 @@ model ChatMessage {
   receiverId Int
   content    String
   createdAt  DateTime @default(now())
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
 
-  sender   User @relation("SentMessages", fields: [senderId], references: [id])
-  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  @@index([receiverId], map: "ChatMessage_receiverId_fkey")
+  @@index([senderId], map: "ChatMessage_senderId_fkey")
 }
 
 enum Role {
